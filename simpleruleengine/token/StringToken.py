@@ -1,10 +1,9 @@
-from operator import ge
 from simpleruleengine.token.SimpleToken import SimpleToken
-from simpleruleengine.operator.NumericOperator import NumericOperator
+from simpleruleengine.operator.StringOperator import StringOperator
 
 
-class NumericToken(SimpleToken):
-    def __init__(self, token_name: str, operator: NumericOperator):
+class StringToken(SimpleToken):
+    def __init__(self, token_name: str, operator: StringOperator):
         super().__init__(token_name, operator)
 
     def evaluate(self, value_to_evaluate):
