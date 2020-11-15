@@ -1,8 +1,8 @@
-from simpleruleengine.token.SimpleToken import SimpleToken
+from simpleruleengine.token.Token import Token
 from simpleruleengine.operator.StringOperator import StringOperator
 
 
-class StringToken(SimpleToken):
+class StringToken(Token):
     def __init__(self, token_name: str, operator: StringOperator):
         super().__init__(token_name, operator)
 

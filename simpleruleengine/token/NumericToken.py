@@ -1,9 +1,9 @@
 from operator import ge
-from simpleruleengine.token.SimpleToken import SimpleToken
+from simpleruleengine.token.Token import Token
 from simpleruleengine.operator.NumericOperator import NumericOperator
 
 
-class NumericToken(SimpleToken):
+class NumericToken(Token):
     def __init__(self, token_name: str, operator: NumericOperator):
         super().__init__(token_name, operator)
 
