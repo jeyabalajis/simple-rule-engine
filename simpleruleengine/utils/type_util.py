@@ -26,3 +26,10 @@ def string_list(val) -> bool:
                 return False
         return True
     return False
+
+
+def is_dict(val) -> bool:
+    """ is_dict validates whether the value sent is a dict"""
+    if type(val).__name__ == 'dict':
+        return True
+    return False

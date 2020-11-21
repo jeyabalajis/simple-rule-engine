@@ -1,0 +1,148 @@
+{
+  "$rule": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": [
+    "conditional"
+  ],
+  "properties": {
+    "conditional": {
+      "$ref": "#/definitions/conditional"
+    }
+  },
+  "definitions": {
+    "conditional": {
+      "type": "object",
+      "required": [
+        "type",
+        "elements"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "@when_any",
+            "@when_all"
+          ]
+        },
+        "elements": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "token": {
+                "$ref": "#/definitions/token"
+              },
+              "conditional": {
+                "$ref": "#/definitions/conditional"
+              }
+            },
+            "oneOf": [
+              {
+                "required": [
+                  "token"
+                ]
+              },
+              {
+                "required": [
+                  "conditional"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    "token": {
+      "type": "object",
+      "properties": {
+        "token_name": {
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/definitions/operator"
+        }
+      }
+    },
+    "operator": {
+      "type": "object",
+      "required": [
+        "operation",
+        "operator_type"
+      ],
+      "properties": {
+        "operation": {
+          "type": "string",
+          "enum": [
+            ">=",
+            "<=",
+            "=",
+            "!=",
+            ">",
+            "<",
+            "in",
+            "not_in"
+          ]
+        },
+        "operator_type": {
+          "type": "string",
+          "enum": [
+            "string",
+            "numeric"
+          ]
+        },
+        "base_value_string": {
+          "type": "string"
+        },
+        "base_value_array_string": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "base_value_numeric": {
+          "type": "number"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "operator_type": {
+              "enum": [
+                "string"
+              ]
+            }
+          },
+          "required": [
+            "base_value_string"
+          ]
+        },
+        {
+          "properties": {
+            "operator_type": {
+              "enum": [
+                "string"
+              ]
+            }
+          },
+          "required": [
+            "base_value_array_string"
+          ]
+        },
+        {
+          "properties": {
+            "operator_type": {
+              "enum": [
+                "numeric"
+              ]
+            }
+          },
+          "required": [
+            "base_value_numeric"
+          ]
+        }
+      ]
+    }
+  }
+}

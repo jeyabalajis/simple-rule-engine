@@ -1,6 +1,7 @@
 name: simple-rule-engine
 channels:
   - defaults
+  - conda-forge
 dependencies:
   - atomicwrites=1.4.0=py_0
   - attrs=20.3.0=pyhd3eb1b0_0
