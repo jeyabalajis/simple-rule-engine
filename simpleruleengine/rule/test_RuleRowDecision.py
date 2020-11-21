@@ -7,8 +7,7 @@ import fastjsonschema
 class TestRuleRowDecision(TestCase):
     def test_validate_correct_schema(self):
         _test_rule_row = {
-            "conditional": {
-                "type": "@when_all",
+            "all_of": {
                 "elements": [
                     {
                         "token": {
@@ -41,8 +40,7 @@ class TestRuleRowDecision(TestCase):
     def test_validate_incorrect_schema(self):
         with pytest.raises(fastjsonschema.JsonSchemaException):
             _test_rule_row = {
-                "conditional": {
-                    "type": "@when_all",
+                "all_of": {
                     "elements": [
                         {
                             "token": {
