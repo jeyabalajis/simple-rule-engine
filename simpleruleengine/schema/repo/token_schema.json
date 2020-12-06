@@ -1,0 +1,16 @@
+{
+  "$rule": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "token": {
+      "type": "object",
+      "properties": {
+        "token_name": {
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "operator_schema.json#/definitions/operator"
+        }
+      }
+    }
+  }
+}

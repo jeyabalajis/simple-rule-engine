@@ -1,17 +1,18 @@
-import fastjsonschema
-import os
-import inspect
-import json
+from simpleruleengine.conditional.Conditional import Conditional
 
 
 class RuleRowDecision:
-    cwd = os.path.dirname(os.path.abspath(inspect.stack()[0][1]))
-    path = cwd + "/schema/" + "decision_rule_row_schema.json"
-    with open(path) as f:
-        __rule_row_decision_schema = json.load(f)
+    def __init__(self, antecedent: Conditional, consequent: any):
+        self.antecedent: Conditional = antecedent
+        self.consequent: any = consequent
 
-    def __init__(self, json_data: dict):
-        self.json_data = json_data
+    def evaluate(self, token_dict: dict) -> any:
+        if self.antecedent.evaluate(token_dict):
+            return self.consequent
+        else:
+            return {}
 
-    def validate_json_data(self):
-        return fastjsonschema.compile(self.__rule_row_decision_schema)(self.json_data)
+    @classmethod
+    def __validate_antecedent(cls, antecedent):
+        if not isinstance(antecedent, Conditional):
+            raise TypeError("Only Conditional allowed for antecedent")

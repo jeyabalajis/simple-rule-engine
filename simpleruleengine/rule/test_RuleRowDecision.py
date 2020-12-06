@@ -1,70 +1,22 @@
 from unittest import TestCase
 from simpleruleengine.rule.RuleRowDecision import RuleRowDecision
-import pytest
-import fastjsonschema
+from simpleruleengine.token.NumericToken import NumericToken
+from simpleruleengine.token.StringToken import StringToken
+from simpleruleengine.operator.Gt import Gt
+from simpleruleengine.operator.In import In
+from simpleruleengine.conditional.And import And
 
 
 class TestRuleRowDecision(TestCase):
-    def test_validate_correct_schema(self):
-        _test_rule_row = {
-            "all_of": {
-                "elements": [
-                    {
-                        "token": {
-                            "token_name": "age",
-                            "operator": {
-                                "operation": ">=",
-                                "operator_type": "numeric",
-                                "base_value_numeric": 35
-                            }
-                        }
-                    },
-                    {
-                        "token": {
-                            "token_name": "ownership",
-                            "operator": {
-                                "operation": "in",
-                                "operator_type": "string",
-                                "base_value_array_string": ["owned", "leased"]
-                            }
-                        },
-                    }
-                ]
-            }
-        }
-        rule_row_decision = RuleRowDecision(_test_rule_row)
+    def test_evaluate(self):
+        _token_age = NumericToken(token_name="age", operator=Gt(35))
+        _in = In(["dog", "cat"])
+        _token_pet = StringToken("pet", _in)
 
-        if not rule_row_decision.validate_json_data():
+        _tokens = [_token_age, _token_pet]
+        _and = And(_tokens)
+
+        _rule_row_decision = RuleRowDecision(_and, "GO")
+        _token_dict = {"age": 40, "pet": "dog"}
+        if _rule_row_decision.evaluate(_token_dict) != "GO":
             self.fail()
-
-    def test_validate_incorrect_schema(self):
-        with pytest.raises(fastjsonschema.JsonSchemaException):
-            _test_rule_row = {
-                "all_of": {
-                    "elements": [
-                        {
-                            "token": {
-                                "token_name": "age",
-                                "operator": {
-                                    "operation": ">=",
-                                    "operator_type": "numeric",
-                                    "base_value_numeric": 35
-                                }
-                            }
-                        },
-                        {
-                            "token": {
-                                "token_name": "ownership",
-                                "operator": {
-                                    "operation": "in",
-                                    "operator_type": "string",
-                                    "base_value_numeric": 45
-                                }
-                            },
-                        }
-                    ]
-                }
-            }
-            rule_row_decision = RuleRowDecision(_test_rule_row)
-
-            rule_row_decision.validate_json_data()
