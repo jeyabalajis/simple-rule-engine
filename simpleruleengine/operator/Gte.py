@@ -1,6 +1,6 @@
-from simpleruleengine.utils.type_util import numeric
-from simpleruleengine.operator.NumericOperator import NumericOperator
 from operator import ge
+
+from simpleruleengine.operator.NumericOperator import NumericOperator
 
 
 class Gte(NumericOperator):

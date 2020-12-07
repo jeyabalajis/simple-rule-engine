@@ -1,7 +1,9 @@
-import os
 import inspect
 import json
+import os
+
 import fastjsonschema
+
 from simpleruleengine.utils.type_util import is_dict
 
 

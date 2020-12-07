@@ -1,5 +1,6 @@
-from simpleruleengine.operator.NumericOperator import NumericOperator
 from operator import lt
+
+from simpleruleengine.operator.NumericOperator import NumericOperator
 
 
 class Lt(NumericOperator):

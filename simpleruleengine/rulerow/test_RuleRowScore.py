@@ -1,8 +1,9 @@
 from unittest import TestCase
-from simpleruleengine.token.NumericToken import NumericToken
-from simpleruleengine.operator.Gt import Gt
-from simpleruleengine.rule.RuleRowScore import RuleRowScore
+
 from simpleruleengine.conditional.And import And
+from simpleruleengine.operator.Gt import Gt
+from simpleruleengine.rulerow.RuleRowScore import RuleRowScore
+from simpleruleengine.token.NumericToken import NumericToken
 
 
 class TestRuleRowScore(TestCase):

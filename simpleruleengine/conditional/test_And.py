@@ -1,12 +1,14 @@
-import pytest
 from unittest import TestCase
+
+import pytest
+
 from simpleruleengine.conditional.And import And
 from simpleruleengine.conditional.Or import Or
-from simpleruleengine.token.NumericToken import NumericToken
 from simpleruleengine.operator.Gt import Gt
-from simpleruleengine.operator.Lt import Lt
-from simpleruleengine.token.StringToken import StringToken
 from simpleruleengine.operator.In import In
+from simpleruleengine.operator.Lt import Lt
+from simpleruleengine.token.NumericToken import NumericToken
+from simpleruleengine.token.StringToken import StringToken
 
 
 class TestAnd(TestCase):

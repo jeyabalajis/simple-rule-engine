@@ -1,8 +1,6 @@
 from unittest import TestCase
-import pytest
-import fastjsonschema
+
 from simpleruleengine.schema.SchemaReader import SchemaReader
-from simpleruleengine.rule.RuleRowDecision import RuleRowDecision
 
 
 class TestSchemaReader(TestCase):
@@ -47,4 +45,3 @@ class TestSchemaReader(TestCase):
 
         if not _schema_reader.validate_json_data(_test_rule_row):
             self.fail()
-

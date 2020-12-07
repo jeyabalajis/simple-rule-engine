@@ -1,5 +1,5 @@
-from simpleruleengine.token.Token import Token
 from simpleruleengine.operator.StringOperator import StringOperator
+from simpleruleengine.token.Token import Token
 
 
 class StringToken(Token):

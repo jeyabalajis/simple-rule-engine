@@ -1,5 +1,6 @@
-from simpleruleengine.operator.NumericOperator import NumericOperator
 from operator import eq
+
+from simpleruleengine.operator.NumericOperator import NumericOperator
 
 
 class Eq(NumericOperator):

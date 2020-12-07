@@ -1,10 +1,12 @@
 from abc import ABC, abstractmethod
+
 from simpleruleengine.token.Token import Token
 from simpleruleengine.utils.type_util import is_dict
 
 
 class Conditional(ABC):
     """ Conditional is an abstract base class for validating a set of Tokens or Conditionals """
+
     def __init__(self, tokens):
         self.__validate_tokens(tokens)
         self.tokens = tokens
