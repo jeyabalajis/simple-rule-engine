@@ -1,8 +1,10 @@
-import pytest
 from unittest import TestCase
-from simpleruleengine.token.StringToken import StringToken
-from simpleruleengine.operator.NotIn import NotIn
+
+import pytest
+
 from simpleruleengine.operator.In import In
+from simpleruleengine.operator.NotIn import NotIn
+from simpleruleengine.token.StringToken import StringToken
 
 
 class TestStringToken(TestCase):

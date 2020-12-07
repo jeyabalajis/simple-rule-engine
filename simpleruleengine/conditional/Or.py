@@ -19,4 +19,3 @@ class Or(Conditional):
 
             _result = _result or _token_result
         return _result
-

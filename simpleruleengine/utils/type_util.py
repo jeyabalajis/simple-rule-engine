@@ -1,4 +1,3 @@
-
 def numeric(val) -> bool:
     """ Validate whether the value sent is a numeric (integer or float
     :returns bool"""

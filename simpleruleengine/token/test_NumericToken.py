@@ -1,12 +1,13 @@
-import pytest
 from unittest import TestCase
+
+import pytest
 
 from simpleruleengine.operator.Eq import Eq
 from simpleruleengine.operator.Gt import Gt
-from simpleruleengine.token.NumericToken import NumericToken
 from simpleruleengine.operator.Gte import Gte
-from simpleruleengine.operator.Lte import Lte
 from simpleruleengine.operator.Lt import Lt
+from simpleruleengine.operator.Lte import Lte
+from simpleruleengine.token.NumericToken import NumericToken
 
 
 class TestNumericToken(TestCase):

@@ -1,6 +1,5 @@
-from operator import ge
-from simpleruleengine.token.Token import Token
 from simpleruleengine.operator.NumericOperator import NumericOperator
+from simpleruleengine.token.Token import Token
 
 
 class NumericToken(Token):

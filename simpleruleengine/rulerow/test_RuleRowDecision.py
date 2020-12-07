@@ -1,10 +1,11 @@
 from unittest import TestCase
-from simpleruleengine.rule.RuleRowDecision import RuleRowDecision
-from simpleruleengine.token.NumericToken import NumericToken
-from simpleruleengine.token.StringToken import StringToken
+
+from simpleruleengine.conditional.And import And
 from simpleruleengine.operator.Gt import Gt
 from simpleruleengine.operator.In import In
-from simpleruleengine.conditional.And import And
+from simpleruleengine.rulerow.RuleRowDecision import RuleRowDecision
+from simpleruleengine.token.NumericToken import NumericToken
+from simpleruleengine.token.StringToken import StringToken
 
 
 class TestRuleRowDecision(TestCase):

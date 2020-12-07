@@ -1,6 +1,7 @@
-from abc import ABC, abstractmethod
-from simpleruleengine.utils.type_util import numeric
+from abc import abstractmethod
+
 from simpleruleengine.operator.Operator import Operator
+from simpleruleengine.utils.type_util import numeric
 
 
 class NumericOperator(Operator):

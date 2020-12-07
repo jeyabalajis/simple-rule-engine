@@ -1,11 +1,11 @@
 from unittest import TestCase
-from simpleruleengine.conditional.Or import Or
+
 from simpleruleengine.conditional.And import And
-from simpleruleengine.token.NumericToken import NumericToken
+from simpleruleengine.conditional.Or import Or
 from simpleruleengine.operator.Gt import Gt
-from simpleruleengine.operator.Lt import Lt
-from simpleruleengine.token.StringToken import StringToken
 from simpleruleengine.operator.In import In
+from simpleruleengine.token.NumericToken import NumericToken
+from simpleruleengine.token.StringToken import StringToken
 
 
 class TestOr(TestCase):
