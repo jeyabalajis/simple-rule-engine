@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-
+from typing import List, Union
 from simpleruleengine.token.Token import Token
 from simpleruleengine.utils.type_util import is_dict
 
@@ -7,7 +7,7 @@ from simpleruleengine.utils.type_util import is_dict
 class Conditional(ABC):
     """ Conditional is an abstract base class for validating a set of Tokens or Conditionals """
 
-    def __init__(self, tokens):
+    def __init__(self, tokens: List):
         self.__validate_tokens(tokens)
         self.tokens = tokens
 
@@ -20,9 +20,8 @@ class Conditional(ABC):
             if isinstance(token, Conditional):
                 token.evaluate(token_dict)
 
-            if isinstance(token, Token):
-                if token.token_name not in token_dict:
-                    raise ValueError("Value for Token Name {} not sent".format(token.token_name))
+            if isinstance(token, Token) and token.token_name not in token_dict:
+                raise ValueError("Value for Token Name {} not sent".format(token.token_name))
         return True
 
     def get_tokens_dict(self) -> dict:

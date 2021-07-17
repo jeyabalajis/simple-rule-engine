@@ -1,9 +1,10 @@
 from simpleruleengine.conditional.Conditional import Conditional
 from simpleruleengine.token.Token import Token
+from typing import List
 
 
 class And(Conditional):
-    def __init__(self, tokens: [Token]):
+    def __init__(self, tokens: List[Token]):
         super().__init__(tokens)
 
     def evaluate(self, token_dict: dict) -> bool:

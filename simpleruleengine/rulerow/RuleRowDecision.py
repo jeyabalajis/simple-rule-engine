@@ -3,6 +3,7 @@ from simpleruleengine.conditional.Conditional import Conditional
 
 class RuleRowDecision:
     def __init__(self, antecedent: Conditional, consequent: any):
+        self.__validate_antecedent(antecedent)
         self.antecedent: Conditional = antecedent
         self.consequent: any = consequent
 
