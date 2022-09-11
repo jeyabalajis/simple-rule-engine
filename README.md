@@ -1,4 +1,5 @@
 # simple-rule-engine
+
 A __lightweight__ yet __powerful__ rule engine that allows declarative specification of business rules and **saves tons of repeated development work**.
 
 ## Key Features
@@ -30,7 +31,7 @@ The aforementioned decisions involve evaluation of multiple parameters. You simp
 
 > The simple-serverless-rule-engine solves such dynamic decision making problems by abstracting the scoring or decision making into a _framework_ and providing a standard rule template (JSON) to author the rules. 
 
->  As a result, we can conveniently treat the rule engine as a service and just by passing all the facts (a.k.a inputs), we get the the corresponding decisions or scores (output)!
+>  As a result, we can conveniently treat the rule engine as a service and just by passing all the facts (a.k.a inputs), we get the the corresponding decisions or scores (output).
 
 ### Benefits
 - Declarative authoring of rules. This can be done by a business analyst, rather than a developer. The developer just focuses on extracting the facts that are required to be passed into the engine.
