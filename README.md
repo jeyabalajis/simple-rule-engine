@@ -7,7 +7,6 @@ A __lightweight__ yet __powerful__ rule engine that allows declarative specifica
 2. Ability to __version control__ rule declarations thus enabling auditing of rule changes over a period of time.
 3. Ability to author **_chained rules_**. Evaluation of one rule can refer to the result of another rule, thus enabling 
 modular, hierarchical rules. 
-4. Written in Python 3.6 with minimal requirements
 
 # Table of Contents
 - [Why Rule Engine](#Why-Rule-Engine)
@@ -29,28 +28,33 @@ The aforementioned decisions involve evaluation of multiple parameters. You simp
  - The evaluations and/or scores will _always_ change over a period of time to adjust to business needs 
 - The _rules_ will also change based on the nature of the business product.
 
-> The simple-serverless-rule-engine solves such dynamic decision making problems by abstracting the scoring or decision making into a _framework_ and providing a standard rule template (JSON) to author the rules. 
+> The simple-rule-engine solves such dynamic decision making problems by abstracting the scoring or decision making into a _framework_ and providing a standard rule template to author the rules. 
 
->  As a result, we can conveniently treat the rule engine as a service and just by passing all the facts (a.k.a inputs), we get the the corresponding decisions or scores (output).
+> The rules can be authored through a separate UI and stored as rule template in a database. The rule engine then _can be treated as a service_ and just by passing all the facts (a.k.a inputs), we get the the corresponding decisions or scores (output). 
+
+> The caller of the rule engine is agnostic of the business logic behiond rule evaluation.
 
 ### Benefits
+
 - Declarative authoring of rules. This can be done by a business analyst, rather than a developer. The developer just focuses on extracting the facts that are required to be passed into the engine.
 - Versioning of rules to enable the auditing of the rule changes over a period of time.
 
 # Concepts
 
-The simple-serverless-rule-engine is composed of two parts:
+The simple-rule-engine is composed of two parts:
 
 - A Rule template which enables one to declaratively specify a rule, which can either be a Decision (or) a Score. The rule template is uniquely identified by a name.
 - A parser engine which when passed with a rule name & facts, parses the rule template against the facts given and provides an output. The output can either be a score (numeric) or a decision (anything).
 
-The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. you can build a small portion of the score as an independent rule and _“use”_ this rule in another rule. 
+The simple-rule-engine allows the rules to be _“chained”_. I.e. you can build a small portion of the score as an independent rule and _“use”_ this rule in another rule. 
 
-> At the heart of simple-serverless-rule-engine is the rule declaration language. 
+## Rule Declaration Language 
 
-> A rule can either be a Decision or a Score.
+- At the heart of simple-serverless-rule-engine is the rule declaration language. 
+- The rule declaration language supports two types of rules: Decision rule or a Score rule.  
 
-## Score rule:
+### Score rule:
+
 - A Score rule is composed of one or many rule sets. 
 - Each rule-set computes a sub-score and is applied a weight. 
 - The total score then would be the sum of all the individual scores of all the rule sets belonging to a rule.
@@ -59,8 +63,8 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
  
 ![Score Rule Concept](/images/score_rule.png)
 
+### Decision rule:
 
-## Decision rule:
 - A Decision rule is always composed of only one rule set.
 - A rule set is composed of one or many rule rows. 
 - You can ‘roughly’ think of each Rule Row as a Conditional evaluation of the facts (a.k.a antecedent) & a score based on these conditions (a.k.a consequent).
@@ -69,8 +73,7 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
 
 ![Decision Rule Concept](/images/decision_rule.png)
 
-
-## Antecedent and Consequent
+### Antecedent and Consequent
 
 - An antecedent at the core is an evaluator. It evaluates one or many facts through an operator.
 - For evaluating numeric facts, a numeric operator is used. It can be one of (<=, <, >, >=, ==, <>, between, is_none)
@@ -78,7 +81,6 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
 - You can mix evaluation of more than one fact & combine the result with an “and” or “or” condition.
 - You can perform complex evaluations involving multiple facts combining AND and OR conditions recursively in the antecedent. See [Examples](#Examples).
 - The system allows a total recursion depth of 5 to allow complex evaluations.
-- You can use the result of a rule as a token! This way you can build simple modular rules & combine them to get to a bigger rule.
 
 # Examples
 
