@@ -15,8 +15,6 @@ X
 0simpleruleengine/ruleset/test_RuleSetDecision.py,3\1\3172e1fd52fde38a3bd1dd82f80471ff1d95ecc6
 `
 0simpleruleengine/rulerow/test_RuleRowDecision.py,7\2\7247597ab3ad584f6cd2695a76ee164de1ef4e20
-S
-#simpleruleengine/conditional/And.py,3\4\340b49a387507bbd7aeb518c368971158eb7d6b4
 [
 +simpleruleengine/conditional/Conditional.py,4\7\472ccd2fa68dc3a15a12426e0ca69978a67c073e
 O
@@ -73,8 +71,6 @@ W
 'simpleruleengine/conditional/test_Or.py,0\6\067dafb03a42a4561500f31b278a802ed115c643
 U
 %simpleruleengine/operator/Operator.py,3\b\3b4054f3fd9f380ca1c0e3e8003c5e2e8d061c32
-R
-"simpleruleengine/conditional/Or.py,2\9\298c31a390f18fb6c4c3ceea4615a09e38910e8f
 [
 +simpleruleengine/token/test_NumericToken.py,1\4\14108f2092fd41689236a59de58a0481f1384866
 P
@@ -89,3 +85,7 @@ X
 (simpleruleengine/conditional/test_And.py,b\e\be23a782b74313a36a7cf895a558263d304708e9
 O
 simpleruleengine/token/Token.py,5\c\5c7f15cacdc734f0a3c5ed298c617621e4b1e4c6
+W
+'simpleruleengine/conditional/WhenAny.py,d\c\dcbb3a3463144d3a3fc18b88d7b63664bf9d7d54
+W
+'simpleruleengine/conditional/WhenAll.py,c\8\c8ccb4230e757473112001af04999f42dbbc1ab5

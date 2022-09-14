@@ -2,7 +2,7 @@ from unittest import TestCase
 
 import pytest
 
-from simpleruleengine.conditional.And import And
+from simpleruleengine.conditional.WhenAll import WhenAll
 from simpleruleengine.operator.Gt import Gt
 from simpleruleengine.rulerow.RuleRowScore import RuleRowScore
 from simpleruleengine.ruleset.RuleSetScore import RuleSetScore
@@ -12,12 +12,12 @@ from simpleruleengine.token.NumericToken import NumericToken
 class TestRuleSetScore(TestCase):
     def test_evaluate_exception(self):
         with pytest.raises(TypeError):
-            _rule_set_decision = RuleSetScore(["test_1", "test_2"])
+            RuleSetScore(["test_1", "test_2"])
 
     def test_evaluate(self):
         _gt_operator = Gt(2)
         _token = NumericToken("no_of_bl_paid_off_successfully", _gt_operator)
-        _and = And([_token])
+        _and = WhenAll([_token])
 
         _score_row = RuleRowScore(antecedent=_and, consequent=70)
 
@@ -30,7 +30,7 @@ class TestRuleSetScore(TestCase):
     def test_evaluate_2(self):
         _gt_operator = Gt(2)
         _token = NumericToken("no_of_bl_paid_off_successfully", _gt_operator)
-        _and = And([_token])
+        _and = WhenAll([_token])
 
         _score_row = RuleRowScore(antecedent=_and, consequent=70)
 

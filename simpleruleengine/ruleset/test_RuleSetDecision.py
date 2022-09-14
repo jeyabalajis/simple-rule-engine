@@ -2,8 +2,11 @@ from unittest import TestCase
 
 import pytest
 
-from simpleruleengine.conditional.And import And
+from simpleruleengine.conditional.WhenAll import WhenAll
+from simpleruleengine.conditional.WhenAny import WhenAny
+from simpleruleengine.operator.Between import Between
 from simpleruleengine.operator.Gt import Gt
+from simpleruleengine.operator.Gte import Gte
 from simpleruleengine.operator.In import In
 from simpleruleengine.operator.Lte import Lte
 from simpleruleengine.operator.NotIn import NotIn
@@ -16,43 +19,61 @@ from simpleruleengine.token.StringToken import StringToken
 class TestRuleSetDecision(TestCase):
     def test_evaluate_exception(self):
         with pytest.raises(TypeError):
-            _rule_set_decision = RuleSetDecision(["test_1", "test_2"])
+            RuleSetDecision(["test_1", "test_2"])
 
     def test_evaluate(self):
-        _token_age = NumericToken(token_name="age", operator=Gt(35))
-        _in = In(["dog", "cat"])
-        _token_pet = StringToken("pet", _in)
+        age_gt_35 = NumericToken("age", Gt(35))
+        pet_in_dog_cat = StringToken("pet", In(["dog", "cat"]))
+        rule_row_decision_go = RuleRowDecision(
+            WhenAll([age_gt_35, pet_in_dog_cat]),
+            "GO"
+        )
 
-        _tokens = [_token_age, _token_pet]
-        _and = And(_tokens)
+        age_lte_35 = NumericToken("age", Lte(35))
+        pet_not_in_dog_cat = StringToken("pet", NotIn(["dog", "cat"]))
+        rule_row_decision_no_go = RuleRowDecision(
+            WhenAll([age_lte_35, pet_not_in_dog_cat]),
+            "NO_GO"
+        )
 
-        _rule_row_decision_1 = RuleRowDecision(_and, "GO")
+        rule_set_decision = RuleSetDecision([rule_row_decision_go, rule_row_decision_no_go])
 
-        _token_age = NumericToken(token_name="age", operator=Lte(35))
-        _in = NotIn(["dog", "cat"])
-        _token_pet = StringToken("pet", _in)
+        # evaluate a fact now against the rule for no go decision
+        fact_for_no_go = {"age": 25, "pet": "parrot"}
+        assert rule_set_decision.evaluate(fact_for_no_go) == "NO_GO"
 
-        _tokens = [_token_age, _token_pet]
-        _and = And(_tokens)
+    def test_evaluate_simple_decision(self):
+        cibil_score_between_650_800 = NumericToken("cibil_score", Between(floor=650, ceiling=800))
+        marital_status_in_married_unspecified = StringToken("marital_status", In(["Married", "Unspecified"]))
+        business_owned_by_self_family = StringToken("business_ownership", In(["Owned by Self", "Owned by Family"]))
 
-        _rule_row_decision_2 = RuleRowDecision(_and, "NO_GO")
-        _token_dict = {"age": 25, "pet": "parrot"}
+        rule_row_decision_go = RuleRowDecision(
+            WhenAll([cibil_score_between_650_800, marital_status_in_married_unspecified, business_owned_by_self_family]),
+            "GO"
+        )
+        rule_set_decision = RuleSetDecision([rule_row_decision_go])
 
-        _rule_set_decision = RuleSetDecision([_rule_row_decision_1, _rule_row_decision_2])
-        if _rule_set_decision.evaluate(_token_dict) != "NO_GO":
-            self.fail()
+        fact = dict(cibil_score=700, marital_status="Married", business_ownership="Owned by Self")
+        assert rule_set_decision.evaluate(fact) == "GO"
 
-    def test_evaluate_no_decision(self):
-        _token_age = NumericToken(token_name="age", operator=Gt(35))
-        _in = In(["dog", "cat"])
-        _token_pet = StringToken("pet", _in)
+    def test_evaluate_complex_decision(self):
+        applicant_age_gte_35 = NumericToken("applicant_age", Gte(35))
+        business_owned_by_self_family = StringToken("business_ownership", In(["Owned by Self", "Owned by Family"]))
+        applicant_owned_by_self_family = StringToken("applicant_ownership", In(["Owned by Self", "Owned by Family"]))
 
-        _tokens = [_token_age, _token_pet]
-        _and = And(_tokens)
+        rule_row_decision_go = RuleRowDecision(
+            WhenAll(
+                [applicant_age_gte_35, WhenAny([business_owned_by_self_family, applicant_owned_by_self_family])]
+            ),
+            "GO"
+        )
+        rule_set_decision = RuleSetDecision([rule_row_decision_go])
 
-        _rule_row_decision_1 = RuleRowDecision(_and, "GO")
-        _rule_set_decision = RuleSetDecision([_rule_row_decision_1])
+        fact_go = dict(applicant_age=42, applicant_ownership="Not Owned", business_ownership="Owned by Self")
+        assert rule_set_decision.evaluate(fact_go) == "GO"
 
-        _token_dict = {"age": 25, "pet": "parrot"}
-        if _rule_set_decision.evaluate(_token_dict) != RuleSetDecision.NO_DECISION_ROW_EVALUATED:
-            self.fail()
+        fact_no_go_1 = dict(applicant_age=42, applicant_ownership="Not Owned", business_ownership="Not Owned")
+        assert rule_set_decision.evaluate(fact_no_go_1) != "GO"
+
+        fact_no_go_2 = dict(applicant_age=25, applicant_ownership="Owned by Self", business_ownership="Owned by Self")
+        assert rule_set_decision.evaluate(fact_no_go_2) != "GO"
