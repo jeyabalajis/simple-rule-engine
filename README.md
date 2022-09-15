@@ -50,7 +50,7 @@ The simple-rule-engine allows the rules to be _“chained”_. I.e. you can buil
 
 ## Rule Declaration Language 
 
-- At the heart of simple-serverless-rule-engine is the rule declaration language. 
+- At the heart of simple-rule-engine is the rule declaration language. 
 - The rule declaration language supports two types of rules: Decision rule or a Score rule.  
 
 ### Score rule:
