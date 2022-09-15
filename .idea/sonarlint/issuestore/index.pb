@@ -89,3 +89,7 @@ W
 'simpleruleengine/conditional/WhenAny.py,d\c\dcbb3a3463144d3a3fc18b88d7b63664bf9d7d54
 W
 'simpleruleengine/conditional/WhenAll.py,c\8\c8ccb4230e757473112001af04999f42dbbc1ab5
+T
+$simpleruleengine/operator/Between.py,8\3\835cbf19c78f3006b133045087a1275ce43f341e
+Y
+)simpleruleengine/operator/test_Between.py,3\5\35af31587b389988b1d032585482341c331c7998

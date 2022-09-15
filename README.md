@@ -9,11 +9,11 @@ modular, hierarchical rules.
 4. Written in Python 3.6 with minimal requirements
 
 # Table of Contents
-- [Why Rule Engine](#Why-Rule-Engine)
+- [Why RuleScore Engine](#Why-Rule-Engine)
 - [Concepts](#Concepts)
 - [Examples](#Examples)
 
-# Why Rule Engine?
+# Why RuleScore Engine?
 Decision making has always been at the heart of any business. In certain industries (such as Lending), some of the decisions made are so dynamic & at a flux that programming these decisions by hand is counter-productive.
 
 Take the example of the decision of giving someone a loan. It primarily involves ascertaining two fundamental factors:
@@ -40,7 +40,7 @@ The aforementioned decisions involve evaluation of multiple parameters. You simp
 
 The simple-serverless-rule-engine is composed of two parts:
 
-- A Rule template which enables one to declaratively specify a rule, which can either be a Decision (or) a Score. The rule template is uniquely identified by a name.
+- A RuleScore template which enables one to declaratively specify a rule, which can either be a Decision (or) a Score. The rule template is uniquely identified by a name.
 - A parser engine which when passed with a rule name & facts, parses the rule template against the facts given and provides an output. The output can either be a score (numeric) or a decision (anything).
 
 The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. you can build a small portion of the score as an independent rule and _“use”_ this rule in another rule. 
@@ -54,19 +54,19 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
 - Each rule-set computes a sub-score and is applied a weight. 
 - The total score then would be the sum of all the individual scores of all the rule sets belonging to a rule.
 - A rule set is composed of one or many rule rows. 
-- You can ‘roughly’ think of each Rule Row as a Conditional evaluation of the facts (a.k.a antecedent) & a score based on these conditions (a.k.a consequent).
+- You can ‘roughly’ think of each RuleScore Row as a Conditional evaluation of the facts (a.k.a antecedent) & a score based on these conditions (a.k.a consequent).
  
-![Score Rule Concept](/images/score_rule.png)
+![Score RuleScore Concept](/images/score_rule.png)
 
 
 ## Decision rule:
 - A Decision rule is always composed of only one rule set.
 - A rule set is composed of one or many rule rows. 
-- You can ‘roughly’ think of each Rule Row as a Conditional evaluation of the facts (a.k.a antecedent) & a score based on these conditions (a.k.a consequent).
+- You can ‘roughly’ think of each RuleScore Row as a Conditional evaluation of the facts (a.k.a antecedent) & a score based on these conditions (a.k.a consequent).
 - A decision rule always arrives at a single decision at the end of parsing.
 - The decision can be anything (a numeric, a string such as YES/NO or even a JSON)
 
-![Decision Rule Concept](/images/decision_rule.png)
+![Decision RuleScore Concept](/images/decision_rule.png)
 
 
 ## Antecedent and Consequent
@@ -89,7 +89,7 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
 | :----------: | :----------------: | :----------------: | --------:|
 | between 650 and 800        | in [Married, Unspecified]                | in [Owned by Self, Owned by Family] | GO       |
 
-### Rule specification
+### RuleScore specification
 ```json
 { 
     "rule_name" : "eligibility_criteria", 
@@ -163,7 +163,7 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
 - When the applicant age is <35, both the applicant ownership and business ownership must be Owned.
 
 
-### Rule specification
+### RuleScore specification
 ```json
 {
   "rule_name": "eligibility_criteria",
@@ -256,7 +256,7 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
 ```
 
 ## A scoring rule involving multiple parameters
-|Rule set Name|Weightage|
+|RuleScore set Name|Weightage|
 |:-----------:|:-------:|
 |no_of_running_bl_pl|0.3|
 |last_loan_drawn_in_months|0.3|
@@ -306,7 +306,7 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
 |8|2|0|0| -27|  
 |0|13|5|none| 100|
 
-### Rule Specification
+### RuleScore Specification
 ```json
 { 
     "rule_name" : "bureau_score_loans", 

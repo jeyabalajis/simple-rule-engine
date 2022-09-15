@@ -1,8 +1,8 @@
 from simpleruleengine.conditional.Conditional import Conditional
+from simpleruleengine.exception.rule_row_exceptions import RuleRowNotEvaluatedException
 
 
 class RuleRowScore:
-    __DEFAULT_SCORE = 0.0
 
     def __init__(self, antecedent: Conditional, consequent: float):
         self.__validate_antecedent(antecedent)
@@ -14,8 +14,7 @@ class RuleRowScore:
     def evaluate(self, token_dict: dict) -> float:
         if self.antecedent.evaluate(token_dict):
             return self.consequent
-        else:
-            return self.__DEFAULT_SCORE
+        raise RuleRowNotEvaluatedException
 
     @classmethod
     def __validate_antecedent(cls, antecedent):

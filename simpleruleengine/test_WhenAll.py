@@ -66,9 +66,6 @@ class TestAnd(TestCase):
 
         _token_dict = {"age": 40, "pet": "parrot"}
 
-        print("Result of WhenAny is {}".format(_or.evaluate(_token_dict)))
-        print("Result of WhenAll for {} is {}".format(_token_dict, _and.evaluate(_token_dict)))
-
         if _and.evaluate(_token_dict):
             self.fail()
 
