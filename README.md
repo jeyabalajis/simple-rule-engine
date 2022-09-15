@@ -1,4 +1,5 @@
 # simple-rule-engine
+
 A __lightweight__ yet __powerful__ rule engine that allows declarative specification of business rules and **saves tons of repeated development work**.
 
 ## Key Features
@@ -6,14 +7,13 @@ A __lightweight__ yet __powerful__ rule engine that allows declarative specifica
 2. Ability to __version control__ rule declarations thus enabling auditing of rule changes over a period of time.
 3. Ability to author **_chained rules_**. Evaluation of one rule can refer to the result of another rule, thus enabling 
 modular, hierarchical rules. 
-4. Written in Python 3.6 with minimal requirements
 
 # Table of Contents
-- [Why RuleScore Engine](#Why-Rule-Engine)
+- [Why Rule Engine](#Why-Rule-Engine)
 - [Concepts](#Concepts)
 - [Examples](#Examples)
 
-# Why RuleScore Engine?
+# Why Rule Engine?
 Decision making has always been at the heart of any business. In certain industries (such as Lending), some of the decisions made are so dynamic & at a flux that programming these decisions by hand is counter-productive.
 
 Take the example of the decision of giving someone a loan. It primarily involves ascertaining two fundamental factors:
@@ -28,48 +28,52 @@ The aforementioned decisions involve evaluation of multiple parameters. You simp
  - The evaluations and/or scores will _always_ change over a period of time to adjust to business needs 
 - The _rules_ will also change based on the nature of the business product.
 
-> The simple-serverless-rule-engine solves such dynamic decision making problems by abstracting the scoring or decision making into a _framework_ and providing a standard rule template (JSON) to author the rules. 
+> The simple-rule-engine solves such dynamic decision making problems by abstracting the scoring or decision making into a _framework_ and providing a standard rule template to author the rules. 
 
->  As a result, we can conveniently treat the rule engine as a service and just by passing all the facts (a.k.a inputs), we get the the corresponding decisions or scores (output)!
+> The rules can be authored through a separate UI and stored as rule template in a database. The rule engine then _can be treated as a service_ and just by passing all the facts (a.k.a inputs), we get the the corresponding decisions or scores (output). 
+
+> The caller of the rule engine is agnostic of the business logic behiond rule evaluation.
 
 ### Benefits
+
 - Declarative authoring of rules. This can be done by a business analyst, rather than a developer. The developer just focuses on extracting the facts that are required to be passed into the engine.
 - Versioning of rules to enable the auditing of the rule changes over a period of time.
 
 # Concepts
 
-The simple-serverless-rule-engine is composed of two parts:
+The simple-rule-engine is composed of two parts:
 
-- A RuleScore template which enables one to declaratively specify a rule, which can either be a Decision (or) a Score. The rule template is uniquely identified by a name.
+- A Rule template which enables one to declaratively specify a rule, which can either be a Decision (or) a Score. The rule template is uniquely identified by a name.
 - A parser engine which when passed with a rule name & facts, parses the rule template against the facts given and provides an output. The output can either be a score (numeric) or a decision (anything).
 
-The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. you can build a small portion of the score as an independent rule and _“use”_ this rule in another rule. 
+The simple-rule-engine allows the rules to be _“chained”_. I.e. you can build a small portion of the score as an independent rule and _“use”_ this rule in another rule. 
 
-> At the heart of simple-serverless-rule-engine is the rule declaration language. 
+## Rule Declaration Language 
 
-> A rule can either be a Decision or a Score.
+- At the heart of simple-serverless-rule-engine is the rule declaration language. 
+- The rule declaration language supports two types of rules: Decision rule or a Score rule.  
 
-## Score rule:
+### Score rule:
+
 - A Score rule is composed of one or many rule sets. 
 - Each rule-set computes a sub-score and is applied a weight. 
 - The total score then would be the sum of all the individual scores of all the rule sets belonging to a rule.
 - A rule set is composed of one or many rule rows. 
-- You can ‘roughly’ think of each RuleScore Row as a Conditional evaluation of the facts (a.k.a antecedent) & a score based on these conditions (a.k.a consequent).
+- You can ‘roughly’ think of each Rule Row as a Conditional evaluation of the facts (a.k.a antecedent) & a score based on these conditions (a.k.a consequent).
  
-![Score RuleScore Concept](/images/score_rule.png)
+![Score Rule Concept](/images/score_rule.png)
 
+### Decision rule:
 
-## Decision rule:
 - A Decision rule is always composed of only one rule set.
 - A rule set is composed of one or many rule rows. 
-- You can ‘roughly’ think of each RuleScore Row as a Conditional evaluation of the facts (a.k.a antecedent) & a score based on these conditions (a.k.a consequent).
+- You can ‘roughly’ think of each Rule Row as a Conditional evaluation of the facts (a.k.a antecedent) & a score based on these conditions (a.k.a consequent).
 - A decision rule always arrives at a single decision at the end of parsing.
 - The decision can be anything (a numeric, a string such as YES/NO or even a JSON)
 
-![Decision RuleScore Concept](/images/decision_rule.png)
+![Decision Rule Concept](/images/decision_rule.png)
 
-
-## Antecedent and Consequent
+### Antecedent and Consequent
 
 - An antecedent at the core is an evaluator. It evaluates one or many facts through an operator.
 - For evaluating numeric facts, a numeric operator is used. It can be one of (<=, <, >, >=, ==, <>, between, is_none)
@@ -77,7 +81,6 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
 - You can mix evaluation of more than one fact & combine the result with an “and” or “or” condition.
 - You can perform complex evaluations involving multiple facts combining AND and OR conditions recursively in the antecedent. See [Examples](#Examples).
 - The system allows a total recursion depth of 5 to allow complex evaluations.
-- You can use the result of a rule as a token! This way you can build simple modular rules & combine them to get to a bigger rule.
 
 # Examples
 
@@ -89,59 +92,20 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
 | :----------: | :----------------: | :----------------: | --------:|
 | between 650 and 800        | in [Married, Unspecified]                | in [Owned by Self, Owned by Family] | GO       |
 
-### RuleScore specification
-```json
-{ 
-    "rule_name" : "eligibility_criteria", 
-    "rule_description" : "Eligibility Criteria", 
-    "rule_type" : "decision", 
-    "rule_set" : {
-        "set_name" : "eligibility_criteria", 
-        "rule_set_type" : "evaluate", 
-        "rule_rows" : [
-            {
-                "antecedent" : {
-                    "@when_all" : [
-                        {
-                            "token_category" : "organic", 
-                            "token_name" : "cibil_score", 
-                            "operator" : "between", 
-                            "eval_value" : {
-                                "low" : 650, 
-                                "high" : 800
-                            }, 
-                            "token_type" : "numeric"
-                        }, 
-                        {
-                            "token_category" : "organic", 
-                            "token_name" : "marital_status", 
-                            "operator" : "in_list", 
-                            "eval_value" : [
-                                "Married", 
-                                "Unspecified"
-                            ], 
-                            "token_type" : "string"
-                        }, 
-                        {
-                            "token_category" : "organic", 
-                            "token_name" : "business_ownership", 
-                            "operator" : "in_list", 
-                            "eval_value" : [
-                                "Owned by Self", 
-                                "Owned by Family"
-                            ], 
-                            "token_type" : "string"
-                        }
-                    ]
-                }, 
-                "consequent" : {
-                    "decision" : "GO"
-                }
-            }
-        ]
-    }, 
-    "version" : 1
-}
+### Rule specification
+```python
+cibil_score_between_650_800 = NumericToken("cibil_score", Between(floor=650, ceiling=800))
+marital_status_in_married_unspecified = StringToken("marital_status", In(["Married", "Unspecified"]))
+business_owned_by_self_family = StringToken("business_ownership", In(["Owned by Self", "Owned by Family"]))
+
+rule_row_decision_go = RuleRowDecision(
+    WhenAll([cibil_score_between_650_800, marital_status_in_married_unspecified, business_owned_by_self_family]),
+    "GO"
+)
+rule_set_decision = RuleSetDecision([rule_row_decision_go])
+
+fact = dict(cibil_score=700, marital_status="Married", business_ownership="Owned by Self")
+assert rule_set_decision.evaluate(fact) == "GO"
 ```
 
 ## A complex decision tree involving multiple AND  and OR conditions
@@ -159,104 +123,37 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
 | <35        | in [Rented]                | in  [Owned by Self, Owned by Family] | NO GO       |
 | <35        | in [Owned by Self, Owned by Family]                | in [Owned by Self, Owned by Family] | GO       |
 
+
 - when the applicant age is >=35, either of applicant ownership or business ownership must be Owned.
 - When the applicant age is <35, both the applicant ownership and business ownership must be Owned.
 
 
-### RuleScore specification
-```json
-{
-  "rule_name": "eligibility_criteria",
-  "rule_description": "Eligibility Criteria",
-  "rule_type": "decision",
-  "rule_set": {
-    "set_name": "eligibility_criteria",
-    "rule_set_type": "evaluate",
-    "rule_rows": [
-      {
-        "antecedent": {
-          "@when_all": [
-            {
-              "token_category": "organic",
-              "token_name": "applicant_age",
-              "operator": ">=",
-              "eval_value": 35,
-              "token_type": "numeric"
-            },
-            {
-              "@when_any": [
-                {
-                  "token_category": "organic",
-                  "token_name": "applicant_ownership",
-                  "operator": "in_list",
-                  "eval_value": [
-                    "Owned by Self",
-                    "Owned by Family"
-                  ],
-                  "token_type": "string"
-                },
-                {
-                  "token_category": "organic",
-                  "token_name": "business_ownership",
-                  "operator": "in_list",
-                  "eval_value": [
-                    "Owned by Self",
-                    "Owned by Family"
-                  ],
-                  "token_type": "string"
-                }
-              ]
-            }
-          ]
-        },
-        "consequent": {
-          "decision": "GO"
-        }
-      },
-      {
-        "antecedent": {
-          "@when_all": [
-            {
-              "token_category": "organic",
-              "token_name": "applicant_age",
-              "operator": "<=",
-              "eval_value": 35,
-              "token_type": "numeric"
-            },
-            {
-              "token_category": "organic",
-              "token_name": "applicant_ownership",
-              "operator": "in_list",
-              "eval_value": [
-                "Owned by Self",
-                "Owned by Family"
-              ],
-              "token_type": "string"
-            },
-            {
-              "token_category": "organic",
-              "token_name": "business_ownership",
-              "operator": "in_list",
-              "eval_value": [
-                "Owned by Self",
-                "Owned by Family"
-              ],
-              "token_type": "string"
-            }
-          ]
-        },
-        "consequent": {
-          "decision": "GO"
-        }
-      }
-    ]
-  },
-  "version": 1
-}
+### Rule specification
+```python
+applicant_age_gte_35 = NumericToken("applicant_age", Gte(35))
+business_owned_by_self_family = StringToken("business_ownership", In(["Owned by Self", "Owned by Family"]))
+applicant_owned_by_self_family = StringToken("applicant_ownership", In(["Owned by Self", "Owned by Family"]))
+
+rule_row_decision_go = RuleRowDecision(
+    WhenAll(
+        [applicant_age_gte_35, WhenAny([business_owned_by_self_family, applicant_owned_by_self_family])]
+    ),
+    "GO"
+)
+rule_set_decision = RuleSetDecision([rule_row_decision_go])
+
+fact_go = dict(applicant_age=42, applicant_ownership="Not Owned", business_ownership="Owned by Self")
+assert rule_set_decision.evaluate(fact_go) == "GO"
+
+fact_no_go_1 = dict(applicant_age=42, applicant_ownership="Not Owned", business_ownership="Not Owned")
+assert rule_set_decision.evaluate(fact_no_go_1) != "GO"
+
+fact_no_go_2 = dict(applicant_age=25, applicant_ownership="Owned by Self", business_ownership="Owned by Self")
+assert rule_set_decision.evaluate(fact_no_go_2) != "GO"
 ```
 
 ## A scoring rule involving multiple parameters
-|RuleScore set Name|Weightage|
+|Rule set Name|Weightage|
 |:-----------:|:-------:|
 |no_of_running_bl_pl|0.3|
 |last_loan_drawn_in_months|0.3|
@@ -306,7 +203,7 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
 |8|2|0|0| -27|  
 |0|13|5|none| 100|
 
-### RuleScore Specification
+### Rule Specification
 ```json
 { 
     "rule_name" : "bureau_score_loans", 
@@ -573,385 +470,6 @@ The simple-serverless-rule-engine allows the rules to be _“chained”_. I.e. y
                     }, 
                     "consequent" : {
                         "score" : 100.0
-                    }
-                }
-            ]
-        }
-    ]
-}
-```
-
-
-## A __chained__ score dependent on two other score rules
-
-### Banking Score, which is dependent on inward_cheque_bounces_in_6_months and performance_ratios
-```json
-{ 
-    "rule_name" : "banking_score", 
-    "rule_description" : "banking_score", 
-    "rule_type" : "score", 
-    "rule_set" : [
-        {
-            "set_ name" : "inward_cheque_bounces_in_6_months_score", 
-            "rule_name" : "inward_cheque_bounces_in_6_months", 
-            "weight" : 0.4, 
-            "rule_set_type" : "compute"
-        }, 
-        {
-            "set_name" : "performance_ratios_score", 
-            "rule_name" : "performance_ratios", 
-            "weight" : 0.6, 
-            "rule_set_type" : "compute"
-        }
-    ]
-}
-```
-
-### inward_cheque_bounces_in_6_months
-```json
-{ 
-    "rule_name" : "inward_cheque_bounces_in_6_months", 
-    "rule_description" : "inward_cheque_bounces_in_6_months_score", 
-    "rule_type" : "score", 
-    "rule_set" : [
-        {
-            "set_name" : "inward_cheque_bounces_in_6months", 
-            "weight" : 0.3, 
-            "rule_set_type" : "evaluate", 
-            "rule_rows" : [
-                {
-                    "antecedent" : {
-                        "token_name" : "inward_cheque_bounces_in_6months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 5.0
-                    }, 
-                    "consequent" : {
-                        "score" : -100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "inward_cheque_bounces_in_6months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 3.0
-                    }, 
-                    "consequent" : {
-                        "score" : 0.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "inward_cheque_bounces_in_6months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 1.0
-                    }, 
-                    "consequent" : {
-                        "score" : 50.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "inward_cheque_bounces_in_6months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<=", 
-                        "eval_value" : 0.0
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "inward_cheque_bounces_in_6months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "is_none"
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }
-            ]
-        }, 
-        {
-            "set_name" : "inward_cheque_bounces_in_3months", 
-            "weight" : 0.7, 
-            "rule_set_type" : "evaluate", 
-            "rule_rows" : [
-                {
-                    "antecedent" : {
-                        "token_name" : "inward_cheque_bounces_in_3months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 3.0
-                    }, 
-                    "consequent" : {
-                        "score" : -100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "inward_cheque_bounces_in_3months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 2.0
-                    }, 
-                    "consequent" : {
-                        "score" : 0.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "inward_cheque_bounces_in_3months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 1.0
-                    }, 
-                    "consequent" : {
-                        "score" : 30.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "inward_cheque_bounces_in_3months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "==", 
-                        "eval_value" : 0.0
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "inward_cheque_bounces_in_3months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "is_none"
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }
-            ]
-        }
-    ]
-}
-```
-
-### performance_ratios
-
-```json
-{ 
-    "rule_name" : "performance_ratios", 
-    "rule_description" : "performance_ratios_score", 
-    "rule_type" : "score", 
-    "rule_set" : [
-        {
-            "set_name" : "txn_value_growth_qoq_cq_pq", 
-            "weight" : 0.4, 
-            "rule_set_type" : "evaluate", 
-            "rule_rows" : [
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_growth_qoq_cq_pq", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<", 
-                        "eval_value" : 0.5
-                    }, 
-                    "consequent" : {
-                        "score" : -100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_growth_qoq_cq_pq", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<", 
-                        "eval_value" : 0.8
-                    }, 
-                    "consequent" : {
-                        "score" : 35.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_growth_qoq_cq_pq", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<", 
-                        "eval_value" : 1.0
-                    }, 
-                    "consequent" : {
-                        "score" : 70.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_growth_qoq_cq_pq", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 1.0
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_growth_qoq_cq_pq", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "is_none"
-                    }, 
-                    "consequent" : {
-                        "score" : 0.0
-                    }
-                }
-            ]
-        }, 
-        {
-            "set_name" : "txn_value_growth_mom_cm_pm", 
-            "weight" : 0.4, 
-            "rule_set_type" : "evaluate", 
-            "rule_rows" : [
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_growth_mom_cm_pm", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<", 
-                        "eval_value" : 0.5
-                    }, 
-                    "consequent" : {
-                        "score" : -100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_growth_mom_cm_pm", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<", 
-                        "eval_value" : 0.8
-                    }, 
-                    "consequent" : {
-                        "score" : 35.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_growth_mom_cm_pm", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<", 
-                        "eval_value" : 1.0
-                    }, 
-                    "consequent" : {
-                        "score" : 70.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_growth_mom_cm_pm", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 1.0
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_growth_mom_cm_pm", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "is_none"
-                    }, 
-                    "consequent" : {
-                        "score" : 0.0
-                    }
-                }
-            ]
-        }, 
-        {
-            "set_name" : "txn_value_variance_momin_momax", 
-            "weight" : 0.2, 
-            "rule_set_type" : "evaluate", 
-            "rule_rows" : [
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_variance_momin_momax", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<", 
-                        "eval_value" : 0.2
-                    }, 
-                    "consequent" : {
-                        "score" : 0.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_variance_momin_momax", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<", 
-                        "eval_value" : 0.4
-                    }, 
-                    "consequent" : {
-                        "score" : 30.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_variance_momin_momax", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<", 
-                        "eval_value" : 0.6
-                    }, 
-                    "consequent" : {
-                        "score" : 60.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_variance_momin_momax", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 0.6
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "txn_value_variance_momin_momax", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "is_none"
-                    }, 
-                    "consequent" : {
-                        "score" : 0.0
                     }
                 }
             ]
