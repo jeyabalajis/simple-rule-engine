@@ -155,10 +155,8 @@ assert rule_set_decision.evaluate(fact_no_go_2) != "GO"
 ## A scoring rule involving multiple parameters
 |Rule set Name|Weightage|
 |:-----------:|:-------:|
-|no_of_running_bl_pl|0.3|
-|last_loan_drawn_in_months|0.3|
-|no_of_bl_paid_off_successfully|0.2|
-|value_of_bl_paid_successfully|0.2|
+|no_of_running_bl_pl|0.5|
+|last_loan_drawn_in_months|0.5|
 
 ### no_of_running_bl_pl
 |Condition|Score|
@@ -178,302 +176,101 @@ assert rule_set_decision.evaluate(fact_no_go_2) != "GO"
 |last_loan_drawn_in_months >12 |100|
 |last_loan_drawn_in_months is none |100|
 
-
-### no_of_bl_paid_off_successfully
-|Condition|Score|
-|:-----------:|:-------:|
-|no_of_bl_paid_off_successfully == 0 |30|
-|no_of_bl_paid_off_successfully <=2 |70|
-|no_of_bl_paid_off_successfully <= 4 |85|
-|no_of_bl_paid_off_successfully >4 |100|
-|no_of_bl_paid_off_successfully is none |100|
-
-### value_of_bl_paid_successfully
-|Condition|Score|
-|:-----------:|:-------:|
-|value_of_bl_paid_successfully == 0 |30|
-|value_of_bl_paid_successfully <=100000 |35|
-|value_of_bl_paid_successfully <= 400000 |50|
-|value_of_bl_paid_successfully > 400000 |100|
-|value_of_bl_paid_successfully is none |100|
-
-### Test Cases
-|no_of_running_bl_pl|last_loan_drawn_in_months|no_of_bl_paid_off_successfully|value_of_bl_paid_successfully|Final Score|
-|:-----------:|:-------:|:-----------:|:-------:|:---------:|
-|8|2|0|0| -27|  
-|0|13|5|none| 100|
-
 ### Rule Specification
-```json
-{ 
-    "rule_name" : "bureau_score_loans", 
-    "rule_description" : "bureau_score_loans", 
-    "rule_type" : "score", 
-    "rule_set" : [
-        {
-            "set_name" : "no_of_running_bl_pl", 
-            "weight" : 0.3, 
-            "rule_set_type" : "evaluate", 
-            "rule_rows" : [
-                {
-                    "antecedent" : {
-                        "token_name" : "no_of_running_bl_pl", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 7.0
-                    }, 
-                    "consequent" : {
-                        "score" : -100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "no_of_running_bl_pl", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 4.0
-                    }, 
-                    "consequent" : {
-                        "score" : -40.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "no_of_running_bl_pl", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 2.0
-                    }, 
-                    "consequent" : {
-                        "score" : 30.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "no_of_running_bl_pl", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">=", 
-                        "eval_value" : 0.0
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "no_of_running_bl_pl", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "is_none"
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }
-            ]
-        }, 
-        {
-            "set_name" : "last_loan_drawn_in_months", 
-            "weight" : 0.3, 
-            "rule_set_type" : "evaluate", 
-            "rule_rows" : [
-                {
-                    "antecedent" : {
-                        "token_name" : "last_loan_drawn_in_months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "==", 
-                        "eval_value" : 0.0
-                    }, 
-                    "consequent" : {
-                        "score" : 30.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "last_loan_drawn_in_months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<", 
-                        "eval_value" : 3.0
-                    }, 
-                    "consequent" : {
-                        "score" : -30.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "last_loan_drawn_in_months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<=", 
-                        "eval_value" : 12.0
-                    }, 
-                    "consequent" : {
-                        "score" : 40.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "last_loan_drawn_in_months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">", 
-                        "eval_value" : 12.0
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "last_loan_drawn_in_months", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "is_none"
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }
-            ]
-        }, 
-        {
-            "set_name" : "no_of_bl_paid_off_successfully", 
-            "weight" : 0.2, 
-            "rule_set_type" : "evaluate", 
-            "rule_rows" : [
-                {
-                    "antecedent" : {
-                        "token_name" : "no_of_bl_paid_off_successfully", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "==", 
-                        "eval_value" : 0.0
-                    }, 
-                    "consequent" : {
-                        "score" : 30.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "no_of_bl_paid_off_successfully", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<=", 
-                        "eval_value" : 2.0
-                    }, 
-                    "consequent" : {
-                        "score" : 70.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "no_of_bl_paid_off_successfully", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<=", 
-                        "eval_value" : 4.0
-                    }, 
-                    "consequent" : {
-                        "score" : 85.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "no_of_bl_paid_off_successfully", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">", 
-                        "eval_value" : 4.0
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "no_of_bl_paid_off_successfully", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "is_none"
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }
-            ]
-        }, 
-        {
-            "set_name" : "value_of_bl_paid_successfully", 
-            "weight" : 0.2, 
-            "rule_set_type" : "evaluate", 
-            "rule_rows" : [
-                {
-                    "antecedent" : {
-                        "token_name" : "value_of_bl_paid_successfully", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "==", 
-                        "eval_value" : 0.0
-                    }, 
-                    "consequent" : {
-                        "score" : 30.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "value_of_bl_paid_successfully", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<=", 
-                        "eval_value" : 100000.0
-                    }, 
-                    "consequent" : {
-                        "score" : 35.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "value_of_bl_paid_successfully", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "<=", 
-                        "eval_value" : 400000.0
-                    }, 
-                    "consequent" : {
-                        "score" : 50.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "value_of_bl_paid_successfully", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : ">", 
-                        "eval_value" : 400000.0
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }, 
-                {
-                    "antecedent" : {
-                        "token_name" : "value_of_bl_paid_successfully", 
-                        "token_type" : "numeric", 
-                        "token_category" : "organic", 
-                        "operator" : "is_none"
-                    }, 
-                    "consequent" : {
-                        "score" : 100.0
-                    }
-                }
-            ]
-        }
-    ]
-}
+```python
+no_run_bl_pl_gte_7_score_minus_100 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(7))]), -100)
+no_run_bl_pl_gte_4_score_minus_40 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(4))]), -40)
+no_run_bl_pl_gte_2_score_30 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(2))]), 30)
+no_run_bl_pl_gte_0_score_100 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(0))]), 100)
+
+no_of_run_bl_pl_rule_set = RuleSetScore(
+    [no_run_bl_pl_gte_7_score_minus_100, no_run_bl_pl_gte_4_score_minus_40,
+     no_run_bl_pl_gte_2_score_30, no_run_bl_pl_gte_0_score_100],
+    0.5
+)
+
+fact_no_run_bl_pl_2 = dict(no_of_running_bl_pl=2)
+assert no_of_run_bl_pl_rule_set.evaluate(fact_no_run_bl_pl_2) == 15.0
+
+last_loan_drawn_in_months_eq_0_score_30 = RuleRowScore(
+    WhenAll([NumericToken("last_loan_drawn_in_months", Eq(0))]),
+    30
+)
+last_loan_drawn_in_months_lt_3_score_minus_30 = RuleRowScore(
+    WhenAll([NumericToken("last_loan_drawn_in_months", Lt(3))]),
+    -30
+)
+last_loan_drawn_in_months_lte_12_score_40 = RuleRowScore(
+    WhenAll([NumericToken("last_loan_drawn_in_months", Lte(12))]),
+    40
+)
+last_loan_drawn_in_months_gt_12_score_100 = RuleRowScore(
+    WhenAll([NumericToken("last_loan_drawn_in_months", Gt(12))]),
+    100
+)
+
+last_loan_drawn_in_months_rule_set = RuleSetScore(
+    [
+        last_loan_drawn_in_months_eq_0_score_30,
+        last_loan_drawn_in_months_lt_3_score_minus_30,
+        last_loan_drawn_in_months_lte_12_score_40,
+        last_loan_drawn_in_months_gt_12_score_100
+    ],
+    0.5
+)
+
+fact_last_loan_drawn_in_months_lte_12 = dict(last_loan_drawn_in_months=6)
+assert last_loan_drawn_in_months_rule_set.evaluate(fact_last_loan_drawn_in_months_lte_12) == 20.0
+
+fact_rule_score = dict(last_loan_drawn_in_months=6, no_of_running_bl_pl=2)
+rule_score = RuleScore([no_of_run_bl_pl_rule_set, last_loan_drawn_in_months_rule_set])
+assert rule_score.evaluate(fact_rule_score) == 35.0
+
+no_run_bl_pl_gte_7_score_minus_100 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(7))]), -100)
+no_run_bl_pl_gte_4_score_minus_40 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(4))]), -40)
+no_run_bl_pl_gte_2_score_30 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(2))]), 30)
+no_run_bl_pl_gte_0_score_100 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(0))]), 100)
+
+no_of_run_bl_pl_rule_set = RuleSetScore(
+    [no_run_bl_pl_gte_7_score_minus_100, no_run_bl_pl_gte_4_score_minus_40,
+     no_run_bl_pl_gte_2_score_30, no_run_bl_pl_gte_0_score_100],
+    0.5
+)
+
+fact_no_run_bl_pl_2 = dict(no_of_running_bl_pl=2)
+assert no_of_run_bl_pl_rule_set.evaluate(fact_no_run_bl_pl_2) == 15.0
+
+last_loan_drawn_in_months_eq_0_score_30 = RuleRowScore(
+    WhenAll([NumericToken("last_loan_drawn_in_months", Eq(0))]),
+    30
+)
+last_loan_drawn_in_months_lt_3_score_minus_30 = RuleRowScore(
+    WhenAll([NumericToken("last_loan_drawn_in_months", Lt(3))]),
+    -30
+)
+last_loan_drawn_in_months_lte_12_score_40 = RuleRowScore(
+    WhenAll([NumericToken("last_loan_drawn_in_months", Lte(12))]),
+    40
+)
+last_loan_drawn_in_months_gt_12_score_100 = RuleRowScore(
+    WhenAll([NumericToken("last_loan_drawn_in_months", Gt(12))]),
+    100
+)
+
+last_loan_drawn_in_months_rule_set = RuleSetScore(
+    [
+        last_loan_drawn_in_months_eq_0_score_30,
+        last_loan_drawn_in_months_lt_3_score_minus_30,
+        last_loan_drawn_in_months_lte_12_score_40,
+        last_loan_drawn_in_months_gt_12_score_100
+    ],
+    0.5
+)
+
+fact_last_loan_drawn_in_months_lte_12 = dict(last_loan_drawn_in_months=6)
+assert last_loan_drawn_in_months_rule_set.evaluate(fact_last_loan_drawn_in_months_lte_12) == 20.0
+
+fact_rule_score = dict(last_loan_drawn_in_months=6, no_of_running_bl_pl=2)
+rule_score = RuleScore([no_of_run_bl_pl_rule_set, last_loan_drawn_in_months_rule_set])
+assert rule_score.evaluate(fact_rule_score) == 35.0
 ```
