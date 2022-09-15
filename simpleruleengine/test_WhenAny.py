@@ -1,21 +1,21 @@
 from unittest import TestCase
 
-from simpleruleengine.conditional.And import And
-from simpleruleengine.conditional.Or import Or
+from simpleruleengine.conditional.WhenAll import WhenAll
+from simpleruleengine.conditional.WhenAny import WhenAny
 from simpleruleengine.operator.Gt import Gt
 from simpleruleengine.operator.In import In
 from simpleruleengine.token.NumericToken import NumericToken
 from simpleruleengine.token.StringToken import StringToken
 
 
-class TestOr(TestCase):
+class TestWhenAny(TestCase):
     def test_evaluate_true(self):
         _token_age = NumericToken(token_name="age", operator=Gt(35))
         _in = In(["dog", "cat"])
         _token_pet = StringToken("pet", _in)
 
         _tokens = [_token_age, _token_pet]
-        _or = Or(_tokens)
+        _or = WhenAny(_tokens)
 
         _token_dict = {"age": 25, "pet": "dog"}
         if not _or.evaluate(_token_dict):
@@ -27,7 +27,7 @@ class TestOr(TestCase):
         _token_pet = StringToken("pet", _in)
 
         _tokens = [_token_age, _token_pet]
-        _or = Or(_tokens)
+        _or = WhenAny(_tokens)
 
         _token_dict = {"age": 25, "pet": "parrot"}
         if _or.evaluate(_token_dict):
@@ -43,9 +43,9 @@ class TestOr(TestCase):
         _token_ownership = StringToken("ownership", _in)
 
         _tokens = [_token_age_gt, _token_pet]
-        _or = Or(_tokens)
+        _or = WhenAny(_tokens)
 
-        _and = And([_or, _token_ownership])
+        _and = WhenAll([_or, _token_ownership])
 
         _token_dict = {"age": 40, "pet": "parrot", "ownership": "owned"}
 

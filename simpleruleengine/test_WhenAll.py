@@ -2,8 +2,8 @@ from unittest import TestCase
 
 import pytest
 
-from simpleruleengine.conditional.And import And
-from simpleruleengine.conditional.Or import Or
+from simpleruleengine.conditional.WhenAll import WhenAll
+from simpleruleengine.conditional.WhenAny import WhenAny
 from simpleruleengine.operator.Gt import Gt
 from simpleruleengine.operator.In import In
 from simpleruleengine.operator.Lt import Lt
@@ -18,7 +18,7 @@ class TestAnd(TestCase):
         _token_pet = StringToken("pet", _in)
 
         _tokens = [_token_age, _token_pet]
-        _and = And(_tokens)
+        _and = WhenAll(_tokens)
 
         _token_dict = {"age": 40, "pet": "dog"}
         if not _and.evaluate(_token_dict):
@@ -30,7 +30,7 @@ class TestAnd(TestCase):
         _token_pet = StringToken("pet", _in)
 
         _tokens = [_token_age, _token_pet]
-        _and = And(_tokens)
+        _and = WhenAll(_tokens)
 
         _token_dict = {"age": 40, "pet": "parrot"}
         if _and.evaluate(_token_dict):
@@ -47,7 +47,7 @@ class TestAnd(TestCase):
             _token_pet = StringToken("pet", _in)
 
             _tokens = [_token_age, _token_pet]
-            _and = And(_tokens)
+            _and = WhenAll(_tokens)
 
             _token_dict = {"age": 40}
             _and.evaluate(_token_dict)
@@ -60,24 +60,21 @@ class TestAnd(TestCase):
         _token_pet = StringToken("pet", _in)
 
         _tokens = [_token_age_gt, _token_age_lt]
-        _or = Or(_tokens)
+        _or = WhenAny(_tokens)
 
-        _and = And([_or, _token_pet])
+        _and = WhenAll([_or, _token_pet])
 
         _token_dict = {"age": 40, "pet": "parrot"}
-
-        print("Result of Or is {}".format(_or.evaluate(_token_dict)))
-        print("Result of And for {} is {}".format(_token_dict, _and.evaluate(_token_dict)))
 
         if _and.evaluate(_token_dict):
             self.fail()
 
         _token_dict = {"age": 10, "pet": "dog"}
-        print("Result of And for {} is {}".format(_token_dict, _and.evaluate(_token_dict)))
+        print("Result of WhenAll for {} is {}".format(_token_dict, _and.evaluate(_token_dict)))
         if not _and.evaluate(_token_dict):
             self.fail()
 
         _token_dict = {"age": 25, "pet": "dog"}
-        print("Result of And for {} is {}".format(_token_dict, _and.evaluate(_token_dict)))
+        print("Result of WhenAll for {} is {}".format(_token_dict, _and.evaluate(_token_dict)))
         if _and.evaluate(_token_dict):
             self.fail()

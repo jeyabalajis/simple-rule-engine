@@ -1,4 +1,5 @@
 from simpleruleengine.rulerow.RuleRowScore import RuleRowScore
+from simpleruleengine.exception.rule_row_exceptions import RuleRowNotEvaluatedException
 
 
 class RuleSetScore:
@@ -9,9 +10,14 @@ class RuleSetScore:
         self.weight = weight
 
     def evaluate(self, token_dict: dict):
+        score = 0
         for rule_row in self.rule_rows:
-            _result = rule_row.evaluate(token_dict)
-            return _result * self.weight
+            try:
+                score = rule_row.evaluate(token_dict)
+                return score * self.weight
+            except RuleRowNotEvaluatedException:
+                continue
+        return score
 
     @classmethod
     def validate_rule_rows_type(cls, rule_rows):
