@@ -30,4 +30,5 @@ dependencies:
   - wincertstore=0.2=py37_0
   - zipp=3.4.0=pyhd3eb1b0_0
   - zlib=1.2.11=h62dcd97_4
+  - python-fastjsonschema
 
