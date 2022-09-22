@@ -1,4 +1,5 @@
 from simpleruleengine.rulerow.RuleRowDecision import RuleRowDecision
+from simpleruleengine.exception.rule_row_exceptions import RuleRowNotEvaluatedException
 
 
 class RuleSetDecision:
@@ -10,8 +11,9 @@ class RuleSetDecision:
 
     def evaluate(self, token_dict: dict):
         for rule_row in self.rule_rows:
-            _result = rule_row.evaluate(token_dict)
-            if _result == {}:
+            try:
+                _result = rule_row.evaluate(token_dict)
+            except RuleRowNotEvaluatedException:
                 continue
 
             return _result

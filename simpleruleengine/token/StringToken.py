@@ -6,5 +6,7 @@ class StringToken(Token):
     def __init__(self, token_name: str, operator: StringOperator):
         super().__init__(token_name, operator)
 
-    def evaluate(self, value_to_evaluate):
-        return self.operator.evaluate(value_to_evaluate)
+    def evaluate(self, token_dict: dict):
+        if self.token_name not in token_dict:
+            raise ValueError("{} not in token_dict".format(self.token_name))
+        return self.operator.evaluate(token_dict.get(self.token_name))

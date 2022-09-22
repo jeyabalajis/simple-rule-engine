@@ -1,12 +1,12 @@
 from unittest import TestCase
 
-from simpleruleengine.conditional.WhenAll import WhenAll
+from simpleruleengine.conditional.when_all import WhenAll
 from simpleruleengine.operator.Eq import Eq
 from simpleruleengine.operator.Gt import Gt
 from simpleruleengine.operator.Gte import Gte
 from simpleruleengine.operator.Lt import Lt
 from simpleruleengine.operator.Lte import Lte
-from simpleruleengine.rule.RuleScore import RuleScore
+from simpleruleengine.rule.rule_score import RuleScore
 from simpleruleengine.rulerow.RuleRowScore import RuleRowScore
 from simpleruleengine.ruleset.RuleSetScore import RuleSetScore
 from simpleruleengine.token.NumericToken import NumericToken

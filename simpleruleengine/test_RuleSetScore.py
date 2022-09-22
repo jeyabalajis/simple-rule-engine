@@ -2,15 +2,22 @@ from unittest import TestCase
 
 import pytest
 
-from simpleruleengine.conditional.WhenAll import WhenAll
+from simpleruleengine.conditional.when_all import WhenAll
+from simpleruleengine.conditional.when_any import WhenAny
 from simpleruleengine.operator.Eq import Eq
 from simpleruleengine.operator.Gt import Gt
 from simpleruleengine.operator.Gte import Gte
+from simpleruleengine.operator.In import In
 from simpleruleengine.operator.Lt import Lt
 from simpleruleengine.operator.Lte import Lte
+from simpleruleengine.rule.rule_score import RuleScore
+from simpleruleengine.rulerow.RuleRowDecision import RuleRowDecision
 from simpleruleengine.rulerow.RuleRowScore import RuleRowScore
+from simpleruleengine.ruleset.RuleSetDecision import RuleSetDecision
 from simpleruleengine.ruleset.RuleSetScore import RuleSetScore
 from simpleruleengine.token.NumericToken import NumericToken
+from simpleruleengine.token.RuleToken import RuleToken
+from simpleruleengine.token.StringToken import StringToken
 
 
 class TestRuleSetScore(TestCase):
@@ -43,6 +50,38 @@ class TestRuleSetScore(TestCase):
 
         if _score_set.evaluate(_token_dict) != 0.0:
             self.fail()
+
+    def test_nested_rule(self):
+        _gt_operator = Gt(2)
+        _token = NumericToken("no_of_bl_paid_off_successfully", _gt_operator)
+        _and = WhenAll([_token])
+
+        _score_row = RuleRowScore(antecedent=_and, consequent=70)
+
+        _score_set = RuleSetScore([_score_row], 0.6)
+        _token_dict = {"no_of_bl_paid_off_successfully": 3}
+
+        if _score_set.evaluate(_token_dict) != 42:
+            self.fail()
+
+        rule_no_bl_paid_off = RuleScore([_score_set])
+
+        token_bl_pl_paid_off_gt_40 = RuleToken("rule_no_bl_paid_off", Gt(40), rule_no_bl_paid_off)
+        applicant_age_gte_35 = NumericToken("applicant_age", Gte(35))
+        business_owned_by_self_family = StringToken("business_ownership", In(["Owned by Self", "Owned by Family"]))
+        rule_row_decision_go = RuleRowDecision(
+            WhenAll(
+                [applicant_age_gte_35, business_owned_by_self_family, token_bl_pl_paid_off_gt_40]
+            ),
+            "GO"
+        )
+        rule_set_decision = RuleSetDecision([rule_row_decision_go])
+        fact_go = dict(
+            no_of_bl_paid_off_successfully=3,
+            applicant_age=42,
+            business_ownership="Owned by Self"
+        )
+        assert rule_set_decision.evaluate(fact_go) == "GO"
 
     def test_evaluate_complex_score(self):
         no_run_bl_pl_gte_7_score_minus_100 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(7))]), -100)

@@ -69,18 +69,10 @@ S
 ,simpleruleengine/operator/NumericOperator.py,4\d\4d88947bcaa4b37e359117e91e7c789d6f52cd04
 O
 simpleruleengine/token/Token.py,5\c\5c7f15cacdc734f0a3c5ed298c617621e4b1e4c6
-W
-'simpleruleengine/conditional/WhenAny.py,d\c\dcbb3a3463144d3a3fc18b88d7b63664bf9d7d54
-W
-'simpleruleengine/conditional/WhenAll.py,c\8\c8ccb4230e757473112001af04999f42dbbc1ab5
 T
 $simpleruleengine/operator/Between.py,8\3\835cbf19c78f3006b133045087a1275ce43f341e
 a
 1simpleruleengine/exception/rule_row_exceptions.py,5\2\5264cc052c95e6a26c0694a8b2e0e0b13b1f63bc
-R
-"simpleruleengine/rule/RuleScore.py,0\5\058bd0c2deda44b8b69eb57978828c13c6cb4af6
-P
- simpleruleengine/test_WhenAll.py,e\f\ef77affdbee3f5e446e9f2bb1c4f05210c83570d
 P
  simpleruleengine/test_Between.py,9\d\9d9d6bf2629c8e2a69372c2393ca07621d46bd6c
 X
@@ -91,8 +83,6 @@ U
 %simpleruleengine/test_NumericToken.py,a\b\ab211e1e5e47e59677ca7b4db365c227d26d31fa
 T
 $simpleruleengine/test_StringToken.py,9\7\970a446850c5ea992720bb8a38ad25242e23471e
-P
- simpleruleengine/test_WhenAny.py,2\c\2cf5fa506af24c005af8ad42900e440fa6711430
 U
 %simpleruleengine/test_RuleSetScore.py,4\8\488ca4bbaf4fd3fa85178ce322cd17f022172c37
 U
@@ -101,3 +91,22 @@ R
 "simpleruleengine/test_RuleScore.py,a\e\ae74fc6e7da9acfae1b3623dfbba3089f47af99f
 9
 	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d
+:
+
+.gitignore,a\5\a5cc2925ca8258af241be7e5b0381edf30266302
+[
++simpleruleengine/conditional/conditional.py,2\3\23582ae632f092ef6cee1e574c5fbabd6f9eab38
+X
+(simpleruleengine/conditional/when_all.py,3\c\3c92f490defacece37bec333a887f706afcb3eb9
+X
+(simpleruleengine/conditional/when_any.py,2\8\28e713e01949f0c35cb9c442a9cf370953c00998
+Q
+!simpleruleengine/test_when_any.py,e\4\e49c44e6dbdea3537ca51cddb0b539691539e62b
+S
+#simpleruleengine/rule/rule_score.py,4\c\4ca98e1956769e9de25de4dd213f2b70b974117a
+M
+simpleruleengine/rule/rule.py,5\6\56d85ae57dbcbb4972b9d2a9bfd4c35634ad3c40
+Q
+!simpleruleengine/test_when_all.py,f\5\f57bbfa42f8d3e26510537246ddca4df90227d3d
+S
+#simpleruleengine/token/RuleToken.py,d\6\d6cf5d847fcc1efcc7016e96ec732d3c62210a0b

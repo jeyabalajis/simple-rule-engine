@@ -19,11 +19,11 @@ class TestStringToken(TestCase):
     def test_evaluate_in(self):
         _in = In(["dog", "cat"])
         str_token = StringToken("my_token", _in)
-        if not str_token.evaluate("dog"):
+        if not str_token.evaluate({"my_token": "dog"}):
             self.fail()
 
     def test_evaluate_not_in(self):
         _not_in = NotIn(["dog", "cat"])
         str_token = StringToken("my_token", _not_in)
-        if not str_token.evaluate("DOG"):
+        if not str_token.evaluate({"my_token": "DOG"}):
             self.fail()

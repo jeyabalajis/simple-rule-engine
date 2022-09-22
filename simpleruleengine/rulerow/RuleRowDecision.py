@@ -1,4 +1,5 @@
-from simpleruleengine.conditional.Conditional import Conditional
+from simpleruleengine.conditional.conditional import Conditional
+from simpleruleengine.exception.rule_row_exceptions import RuleRowNotEvaluatedException
 
 
 class RuleRowDecision:
@@ -10,8 +11,7 @@ class RuleRowDecision:
     def evaluate(self, token_dict: dict) -> any:
         if self.antecedent.evaluate(token_dict):
             return self.consequent
-        else:
-            return {}
+        raise RuleRowNotEvaluatedException
 
     @classmethod
     def __validate_antecedent(cls, antecedent):

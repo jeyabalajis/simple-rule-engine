@@ -1,4 +1,4 @@
-from simpleruleengine.conditional.Conditional import Conditional
+from simpleruleengine.conditional.conditional import Conditional
 from simpleruleengine.exception.rule_row_exceptions import RuleRowNotEvaluatedException
 
 

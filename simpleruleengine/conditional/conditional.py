@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List, Union
 from simpleruleengine.token.Token import Token
 from simpleruleengine.utils.type_util import is_dict
+from simpleruleengine.rule.rule import Rule
 
 
 class Conditional(ABC):
@@ -16,12 +17,6 @@ class Conditional(ABC):
         if not is_dict(token_dict):
             raise ValueError("Only dict is allowed for token_dict")
 
-        for token in self.tokens:
-            if isinstance(token, Conditional):
-                token.evaluate(token_dict)
-
-            if isinstance(token, Token) and token.token_name not in token_dict:
-                raise ValueError("Value for Token Name {} not sent".format(token.token_name))
         return True
 
     def get_tokens_dict(self) -> dict:
@@ -45,6 +40,7 @@ class Conditional(ABC):
     def __validate_token_instance(cls, token):
         if not (
                 isinstance(token, Token) or
-                isinstance(token, Conditional)
+                isinstance(token, Conditional) or
+                isinstance(token, Rule)
         ):
-            raise TypeError("Only Token or Conditional allowed")
+            raise TypeError("Only Token or Conditional or Rule allowed")
