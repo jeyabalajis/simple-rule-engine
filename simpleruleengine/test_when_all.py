@@ -2,8 +2,8 @@ from unittest import TestCase
 
 import pytest
 
-from simpleruleengine.conditional.WhenAll import WhenAll
-from simpleruleengine.conditional.WhenAny import WhenAny
+from simpleruleengine.conditional.when_all import WhenAll
+from simpleruleengine.conditional.when_any import WhenAny
 from simpleruleengine.operator.Gt import Gt
 from simpleruleengine.operator.In import In
 from simpleruleengine.operator.Lt import Lt
@@ -11,7 +11,7 @@ from simpleruleengine.token.NumericToken import NumericToken
 from simpleruleengine.token.StringToken import StringToken
 
 
-class TestAnd(TestCase):
+class TestWhenAll(TestCase):
     def test_evaluate_true(self):
         _token_age = NumericToken(token_name="age", operator=Gt(35))
         _in = In(["dog", "cat"])

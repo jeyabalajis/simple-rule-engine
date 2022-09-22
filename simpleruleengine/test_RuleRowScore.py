@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from simpleruleengine.conditional.WhenAll import WhenAll
+from simpleruleengine.conditional.when_all import WhenAll
 from simpleruleengine.operator.Gt import Gt
 from simpleruleengine.rulerow.RuleRowScore import RuleRowScore
 from simpleruleengine.token.NumericToken import NumericToken

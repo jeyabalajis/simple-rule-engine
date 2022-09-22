@@ -9,5 +9,5 @@ class Token(ABC):
         self.operator = operator
 
     @abstractmethod
-    def evaluate(self, value_to_evaluate):
+    def evaluate(self, token_dict: dict):
         pass

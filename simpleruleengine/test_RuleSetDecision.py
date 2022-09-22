@@ -2,8 +2,8 @@ from unittest import TestCase
 
 import pytest
 
-from simpleruleengine.conditional.WhenAll import WhenAll
-from simpleruleengine.conditional.WhenAny import WhenAny
+from simpleruleengine.conditional.when_all import WhenAll
+from simpleruleengine.conditional.when_any import WhenAny
 from simpleruleengine.operator.Between import Between
 from simpleruleengine.operator.Gt import Gt
 from simpleruleengine.operator.Gte import Gte
@@ -14,6 +14,8 @@ from simpleruleengine.rulerow.RuleRowDecision import RuleRowDecision
 from simpleruleengine.ruleset.RuleSetDecision import RuleSetDecision
 from simpleruleengine.token.NumericToken import NumericToken
 from simpleruleengine.token.StringToken import StringToken
+
+OWNED = "Not Owned"
 
 
 class TestRuleSetDecision(TestCase):
@@ -69,10 +71,10 @@ class TestRuleSetDecision(TestCase):
         )
         rule_set_decision = RuleSetDecision([rule_row_decision_go])
 
-        fact_go = dict(applicant_age=42, applicant_ownership="Not Owned", business_ownership="Owned by Self")
+        fact_go = dict(applicant_age=42, applicant_ownership=OWNED, business_ownership="Owned by Self")
         assert rule_set_decision.evaluate(fact_go) == "GO"
 
-        fact_no_go_1 = dict(applicant_age=42, applicant_ownership="Not Owned", business_ownership="Not Owned")
+        fact_no_go_1 = dict(applicant_age=42, applicant_ownership=OWNED, business_ownership=OWNED)
         assert rule_set_decision.evaluate(fact_no_go_1) != "GO"
 
         fact_no_go_2 = dict(applicant_age=25, applicant_ownership="Owned by Self", business_ownership="Owned by Self")
