@@ -9,72 +9,46 @@ from simpleruleengine.operator.In import In
 from simpleruleengine.operator.Lt import Lt
 from simpleruleengine.token.NumericToken import NumericToken
 from simpleruleengine.token.StringToken import StringToken
+from simpleruleengine.expression.expression import Expression
 
 
 class TestWhenAll(TestCase):
     def test_evaluate_true(self):
-        _token_age = NumericToken(token_name="age", operator=Gt(35))
-        _in = In(["dog", "cat"])
-        _token_pet = StringToken("pet", _in)
+        numeric_token_age = NumericToken(name="age")
+        age_gt_35 = Expression(numeric_token_age, operator=Gt(35))
 
-        _tokens = [_token_age, _token_pet]
-        _and = WhenAll(_tokens)
+        string_token_pet = StringToken(name="pet")
+        pet_in_dog_cat = Expression(string_token_pet, In(["dog", "cat"]))
 
-        _token_dict = {"age": 40, "pet": "dog"}
-        if not _and.evaluate(_token_dict):
-            self.fail()
+        when_all_age_and_pet = WhenAll([age_gt_35, pet_in_dog_cat])
+
+        token_dict = {"age": 40, "pet": "dog"}
+        assert when_all_age_and_pet.evaluate(token_dict) is True
 
     def test_evaluate_false(self):
-        _token_age = NumericToken(token_name="age", operator=Gt(35))
-        _in = In(["dog", "cat"])
-        _token_pet = StringToken("pet", _in)
+        numeric_token_age = NumericToken(name="age")
+        age_gt_35 = Expression(numeric_token_age, operator=Gt(35))
 
-        _tokens = [_token_age, _token_pet]
-        _and = WhenAll(_tokens)
+        string_token_pet = StringToken(name="pet")
+        pet_in_dog_cat = Expression(string_token_pet, In(["dog", "cat"]))
 
-        _token_dict = {"age": 40, "pet": "parrot"}
-        if _and.evaluate(_token_dict):
-            self.fail()
+        when_all_age_and_pet = WhenAll([age_gt_35, pet_in_dog_cat])
 
-        _token_dict = {"age": 25, "pet": "dog"}
-        if _and.evaluate(_token_dict):
-            self.fail()
+        token_dict = {"age": 40, "pet": "parrot"}
+        assert when_all_age_and_pet.evaluate(token_dict) is False
+
+        token_dict = {"age": 25, "pet": "parrot"}
+        assert when_all_age_and_pet.evaluate(token_dict) is False
 
     def test_insufficient_values(self):
         with pytest.raises(ValueError):
-            _token_age = NumericToken(token_name="age", operator=Gt(35))
-            _in = In(["dog", "cat"])
-            _token_pet = StringToken("pet", _in)
+            numeric_token_age = NumericToken(name="age")
+            age_gt_35 = Expression(numeric_token_age, operator=Gt(35))
 
-            _tokens = [_token_age, _token_pet]
-            _and = WhenAll(_tokens)
+            string_token_pet = StringToken(name="pet")
+            pet_in_dog_cat = Expression(string_token_pet, In(["dog", "cat"]))
 
-            _token_dict = {"age": 40}
-            _and.evaluate(_token_dict)
+            when_all_age_and_pet = WhenAll([age_gt_35, pet_in_dog_cat])
 
-    def test_recursive(self):
-        _token_age_gt = NumericToken(token_name="age", operator=Gt(35))
-        _token_age_lt = NumericToken(token_name="age", operator=Lt(18))
-
-        _in = In(["dog", "cat"])
-        _token_pet = StringToken("pet", _in)
-
-        _tokens = [_token_age_gt, _token_age_lt]
-        _or = WhenAny(_tokens)
-
-        _and = WhenAll([_or, _token_pet])
-
-        _token_dict = {"age": 40, "pet": "parrot"}
-
-        if _and.evaluate(_token_dict):
-            self.fail()
-
-        _token_dict = {"age": 10, "pet": "dog"}
-        print("Result of WhenAll for {} is {}".format(_token_dict, _and.evaluate(_token_dict)))
-        if not _and.evaluate(_token_dict):
-            self.fail()
-
-        _token_dict = {"age": 25, "pet": "dog"}
-        print("Result of WhenAll for {} is {}".format(_token_dict, _and.evaluate(_token_dict)))
-        if _and.evaluate(_token_dict):
-            self.fail()
+            token_dict = {"age": 40}
+            when_all_age_and_pet.evaluate(token_dict)

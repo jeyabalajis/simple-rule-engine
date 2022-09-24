@@ -67,9 +67,10 @@ The simple-rule-engine allows the rules to be _“chained”_. I.e. you can buil
 
 - A Decision rule is always composed of only one rule set.
 - A rule set is composed of one or many rule rows. 
-- You can ‘roughly’ think of each Rule Row as a Conditional evaluation of the facts (a.k.a antecedent) & a score based on these conditions (a.k.a consequent).
+- You can ‘roughly’ think of each Rule Row as a Conditional evaluation of the facts (a.k.a antecedent) & a decision based on these conditions (a.k.a consequent).
 - A decision rule always arrives at a single decision at the end of parsing.
 - The decision can be anything (a numeric, a string such as YES/NO or even a JSON)
+- Once a Rule Row evaluates to True, the corresponding decision is returned immediately. 
 
 ![Decision Rule Concept](/images/decision_rule.png)
 
@@ -81,6 +82,7 @@ The simple-rule-engine allows the rules to be _“chained”_. I.e. you can buil
 - You can mix evaluation of more than one fact & combine the result with an “and” or “or” condition.
 - You can perform complex evaluations involving multiple facts combining AND and OR conditions recursively in the antecedent. See [Examples](#Examples).
 - The system allows a total recursion depth of 5 to allow complex evaluations.
+- A rule can be an antecedent. This allows one rule to use another rule as part of evaulation. 
 
 # Examples
 
@@ -105,7 +107,7 @@ rule_row_decision_go = RuleRowDecision(
 rule_set_decision = RuleSetDecision([rule_row_decision_go])
 
 fact = dict(cibil_score=700, marital_status="Married", business_ownership="Owned by Self")
-assert rule_set_decision.evaluate(fact) == "GO"
+assert rule_set_decision.execute(fact) == "GO"
 ```
 
 ## A complex decision tree involving multiple AND  and OR conditions
@@ -143,13 +145,13 @@ rule_row_decision_go = RuleRowDecision(
 rule_set_decision = RuleSetDecision([rule_row_decision_go])
 
 fact_go = dict(applicant_age=42, applicant_ownership="Not Owned", business_ownership="Owned by Self")
-assert rule_set_decision.evaluate(fact_go) == "GO"
+assert rule_set_decision.execute(fact_go) == "GO"
 
 fact_no_go_1 = dict(applicant_age=42, applicant_ownership="Not Owned", business_ownership="Not Owned")
-assert rule_set_decision.evaluate(fact_no_go_1) != "GO"
+assert rule_set_decision.execute(fact_no_go_1) != "GO"
 
 fact_no_go_2 = dict(applicant_age=25, applicant_ownership="Owned by Self", business_ownership="Owned by Self")
-assert rule_set_decision.evaluate(fact_no_go_2) != "GO"
+assert rule_set_decision.execute(fact_no_go_2) != "GO"
 ```
 
 ## A scoring rule involving multiple parameters
@@ -190,7 +192,7 @@ no_of_run_bl_pl_rule_set = RuleSetScore(
 )
 
 fact_no_run_bl_pl_2 = dict(no_of_running_bl_pl=2)
-assert no_of_run_bl_pl_rule_set.evaluate(fact_no_run_bl_pl_2) == 15.0
+assert no_of_run_bl_pl_rule_set.execute(fact_no_run_bl_pl_2) == 15.0
 
 last_loan_drawn_in_months_eq_0_score_30 = RuleRowScore(
     WhenAll([NumericToken("last_loan_drawn_in_months", Eq(0))]),
@@ -220,11 +222,11 @@ last_loan_drawn_in_months_rule_set = RuleSetScore(
 )
 
 fact_last_loan_drawn_in_months_lte_12 = dict(last_loan_drawn_in_months=6)
-assert last_loan_drawn_in_months_rule_set.evaluate(fact_last_loan_drawn_in_months_lte_12) == 20.0
+assert last_loan_drawn_in_months_rule_set.execute(fact_last_loan_drawn_in_months_lte_12) == 20.0
 
 fact_rule_score = dict(last_loan_drawn_in_months=6, no_of_running_bl_pl=2)
 rule_score = RuleScore([no_of_run_bl_pl_rule_set, last_loan_drawn_in_months_rule_set])
-assert rule_score.evaluate(fact_rule_score) == 35.0
+assert rule_score.execute(fact_rule_score) == 35.0
 
 no_run_bl_pl_gte_7_score_minus_100 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(7))]), -100)
 no_run_bl_pl_gte_4_score_minus_40 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(4))]), -40)
@@ -238,7 +240,7 @@ no_of_run_bl_pl_rule_set = RuleSetScore(
 )
 
 fact_no_run_bl_pl_2 = dict(no_of_running_bl_pl=2)
-assert no_of_run_bl_pl_rule_set.evaluate(fact_no_run_bl_pl_2) == 15.0
+assert no_of_run_bl_pl_rule_set.execute(fact_no_run_bl_pl_2) == 15.0
 
 last_loan_drawn_in_months_eq_0_score_30 = RuleRowScore(
     WhenAll([NumericToken("last_loan_drawn_in_months", Eq(0))]),
@@ -268,9 +270,9 @@ last_loan_drawn_in_months_rule_set = RuleSetScore(
 )
 
 fact_last_loan_drawn_in_months_lte_12 = dict(last_loan_drawn_in_months=6)
-assert last_loan_drawn_in_months_rule_set.evaluate(fact_last_loan_drawn_in_months_lte_12) == 20.0
+assert last_loan_drawn_in_months_rule_set.execute(fact_last_loan_drawn_in_months_lte_12) == 20.0
 
 fact_rule_score = dict(last_loan_drawn_in_months=6, no_of_running_bl_pl=2)
 rule_score = RuleScore([no_of_run_bl_pl_rule_set, last_loan_drawn_in_months_rule_set])
-assert rule_score.evaluate(fact_rule_score) == 35.0
+assert rule_score.execute(fact_rule_score) == 35.0
 ```

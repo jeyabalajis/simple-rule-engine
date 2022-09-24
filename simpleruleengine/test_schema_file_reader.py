@@ -1,11 +1,11 @@
 from unittest import TestCase
 
-from simpleruleengine.schema.SchemaReader import SchemaReader
+from simpleruleengine.schema.schema_file_reader import SchemaFileReader
 
 
 class TestSchemaReader(TestCase):
     def test_schema(self):
-        _schema_reader = SchemaReader(schema_file_name="decision_schema")
+        _schema_reader = SchemaFileReader(schema_file_name_with_path="./schema/repo/decision_schema.json")
 
         _schema = _schema_reader.schema()
         if not isinstance(_schema, dict):
@@ -41,7 +41,7 @@ class TestSchemaReader(TestCase):
                 ]
             }
         }
-        _schema_reader = SchemaReader(schema_file_name="conditional_schema")
+        _schema_reader = SchemaFileReader(schema_file_name_with_path="conditional_schema")
 
         if not _schema_reader.validate_json_data(_test_rule_row):
             self.fail()

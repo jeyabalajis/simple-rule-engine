@@ -1,16 +1,15 @@
 from abc import ABC, abstractmethod
-from typing import List, Union
-from simpleruleengine.token.Token import Token
+from typing import List
+
+from simpleruleengine.expression.expression import Expression
 from simpleruleengine.utils.type_util import is_dict
-from simpleruleengine.rule.rule import Rule
 
 
 class Conditional(ABC):
     """ Conditional is an abstract base class for validating a set of Tokens or Conditionals """
 
-    def __init__(self, tokens: List):
-        self.__validate_tokens(tokens)
-        self.tokens = tokens
+    def __init__(self, expressions: List[Expression]):
+        self.expressions = expressions
 
     @abstractmethod
     def evaluate(self, token_dict: dict) -> bool:
@@ -19,28 +18,14 @@ class Conditional(ABC):
 
         return True
 
-    def get_tokens_dict(self) -> dict:
-        """get_tokens_dict returns a dict of tokens with token_name as key.
+    def get_token_dict_structure(self) -> dict:
+        """get_tokens_dict returns a dict of expressions with token_name as key.
         This can be used by consumer to fill values before calling evaluate
         """
         token_dict = {}
-        for token in self.tokens:
-            token_dict[token.token_name] = None
+        for expression in self.expressions:
+            token_dict_for_expression = expression.token.get_token_dict_structure()
+            for key, value in token_dict_for_expression.items():
+                token_dict[key] = value
 
         return token_dict
-
-    @classmethod
-    def __validate_tokens(cls, tokens):
-        if type(tokens).__name__ not in 'list':
-            raise TypeError("Only List allowed")
-
-        [cls.__validate_token_instance(_token) for _token in tokens]
-
-    @classmethod
-    def __validate_token_instance(cls, token):
-        if not (
-                isinstance(token, Token) or
-                isinstance(token, Conditional) or
-                isinstance(token, Rule)
-        ):
-            raise TypeError("Only Token or Conditional or Rule allowed")
