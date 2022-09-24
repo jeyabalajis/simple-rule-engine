@@ -73,16 +73,10 @@ T
 $simpleruleengine/operator/Between.py,8\3\835cbf19c78f3006b133045087a1275ce43f341e
 a
 1simpleruleengine/exception/rule_row_exceptions.py,5\2\5264cc052c95e6a26c0694a8b2e0e0b13b1f63bc
-P
- simpleruleengine/test_Between.py,9\d\9d9d6bf2629c8e2a69372c2393ca07621d46bd6c
 X
 (simpleruleengine/test_RuleRowDecision.py,5\7\57caf6777e7113a5563048af789b0a5d90915412
 X
 (simpleruleengine/test_RuleSetDecision.py,6\2\62356a4168a86c696affd8e68add117f80a79cde
-U
-%simpleruleengine/test_NumericToken.py,a\b\ab211e1e5e47e59677ca7b4db365c227d26d31fa
-T
-$simpleruleengine/test_StringToken.py,9\7\970a446850c5ea992720bb8a38ad25242e23471e
 U
 %simpleruleengine/test_RuleSetScore.py,4\8\488ca4bbaf4fd3fa85178ce322cd17f022172c37
 U
@@ -110,3 +104,7 @@ Q
 !simpleruleengine/test_when_all.py,f\5\f57bbfa42f8d3e26510537246ddca4df90227d3d
 S
 #simpleruleengine/token/RuleToken.py,d\6\d6cf5d847fcc1efcc7016e96ec732d3c62210a0b
+Y
+)simpleruleengine/expression/expression.py,9\6\96190bc2f64efd057f68af5bc7da678cbaeff09e
+S
+#simpleruleengine/test_expression.py,5\0\50a73d4fc3aa859d6ca62cf20a940fa08e856d9f

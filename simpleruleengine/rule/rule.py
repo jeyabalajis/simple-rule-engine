@@ -5,12 +5,16 @@ from simpleruleengine.utils.type_util import is_dict
 
 class Rule(ABC):
     def __init__(self, tokens: List):
-        self.tokens = tokens
+        self.rule_sets = tokens
 
     @abstractmethod
-    def evaluate(self, token_dict: dict) -> bool:
+    def execute(self, token_dict: dict) -> bool:
         if not is_dict(token_dict):
             raise ValueError("Only dict is allowed for token_dict")
 
         return True
+
+    @abstractmethod
+    def get_token_dict_structure(self) -> dict:
+        return dict()
 

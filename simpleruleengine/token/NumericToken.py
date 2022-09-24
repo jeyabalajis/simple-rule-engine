@@ -1,11 +1,12 @@
-from simpleruleengine.operator.NumericOperator import NumericOperator
 from simpleruleengine.token.Token import Token
 
 
 class NumericToken(Token):
-    def __init__(self, token_name: str, operator: NumericOperator):
-        super().__init__(token_name, operator)
+    def __init__(self, name: str):
+        super().__init__(name)
 
-    def evaluate(self, token_dict: dict):
-        assert self.token_name in token_dict
-        return self.operator.evaluate(token_dict.get(self.token_name))
+    def get_token_dict_structure(self) -> dict:
+        return super(NumericToken, self).get_token_dict_structure()
+
+    def get_token_value(self, token_dict: dict):
+        return super(NumericToken, self).get_token_value(token_dict)

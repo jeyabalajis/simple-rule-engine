@@ -1,18 +1,18 @@
 name: simple-rule-engine
 channels:
-  - defaults
   - conda-forge
+  - defaults
 dependencies:
   - atomicwrites=1.4.0=py_0
   - attrs=20.3.0=pyhd3eb1b0_0
-  - ca-certificates=2020.10.14=0
-  - certifi=2020.6.20=pyhd3eb1b0_3
+  - ca-certificates=2022.9.14=h5b45459_0
+  - certifi=2022.9.14=pyhd8ed1ab_0
   - colorama=0.4.4=py_0
   - importlib-metadata=2.0.0=py_1
   - importlib_metadata=2.0.0=1
   - iniconfig=1.1.1=py_0
   - more-itertools=8.5.0=py_0
-  - openssl=1.1.1h=he774522_0
+  - openssl=1.1.1l=h8ffe710_0
   - packaging=20.4=py_0
   - pip=20.2.4=py37haa95532_0
   - pluggy=0.13.1=py37_0
@@ -20,6 +20,8 @@ dependencies:
   - pyparsing=2.4.7=py_0
   - pytest=6.1.1=py37_0
   - python=3.7.9=h60c2a47_0
+  - python-fastjsonschema=2.16.2=pyhd8ed1ab_0
+  - python_abi=3.7=1_cp37m
   - setuptools=50.3.1=py37haa95532_1
   - six=1.15.0=py_0
   - sqlite=3.33.0=h2a8f88b_0
@@ -30,4 +32,4 @@ dependencies:
   - wincertstore=0.2=py37_0
   - zipp=3.4.0=pyhd3eb1b0_0
   - zlib=1.2.11=h62dcd97_4
-
+prefix: C:\Users\jeyab\Anaconda3\envs\simple-rule-engine

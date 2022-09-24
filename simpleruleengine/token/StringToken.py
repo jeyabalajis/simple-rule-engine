@@ -1,12 +1,12 @@
-from simpleruleengine.operator.StringOperator import StringOperator
 from simpleruleengine.token.Token import Token
 
 
 class StringToken(Token):
-    def __init__(self, token_name: str, operator: StringOperator):
-        super().__init__(token_name, operator)
+    def __init__(self, name: str):
+        super().__init__(name)
 
-    def evaluate(self, token_dict: dict):
-        if self.token_name not in token_dict:
-            raise ValueError("{} not in token_dict".format(self.token_name))
-        return self.operator.evaluate(token_dict.get(self.token_name))
+    def get_token_dict_structure(self) -> dict:
+        return super(StringToken, self).get_token_dict_structure()
+
+    def get_token_value(self, token_dict: dict):
+        return super(StringToken, self).get_token_value(token_dict)

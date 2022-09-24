@@ -4,14 +4,17 @@ from simpleruleengine.rule.rule import Rule
 
 
 class RuleScore(Rule):
-    def __init__(self, tokens: List[RuleSetScore]):
-        super().__init__(tokens)
-        self.tokens = tokens
+    def __init__(self, rule_sets: List[RuleSetScore]):
+        super().__init__(rule_sets)
+        self.rule_sets = rule_sets
 
-    def evaluate(self, token_dict: dict):
-        super(RuleScore, self).evaluate(token_dict)
+    def execute(self, token_dict: dict) -> float:
+        super(RuleScore, self).execute(token_dict)
         total_score = 0
-        for token in self.tokens:
-            total_score += token.evaluate(token_dict=token_dict)
+        for rule_set in self.rule_sets:
+            total_score += rule_set.evaluate(token_dict=token_dict)
 
         return total_score
+
+    def get_token_dict_structure(self) -> dict:
+        return super(RuleScore, self).get_token_dict_structure()

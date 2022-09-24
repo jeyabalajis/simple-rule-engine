@@ -4,6 +4,7 @@ import pytest
 
 from simpleruleengine.conditional.when_all import WhenAll
 from simpleruleengine.conditional.when_any import WhenAny
+from simpleruleengine.expression.expression import Expression
 from simpleruleengine.operator.Between import Between
 from simpleruleengine.operator.Gt import Gt
 from simpleruleengine.operator.Gte import Gte
@@ -15,6 +16,10 @@ from simpleruleengine.ruleset.RuleSetDecision import RuleSetDecision
 from simpleruleengine.token.NumericToken import NumericToken
 from simpleruleengine.token.StringToken import StringToken
 
+OWNED_BY_FAMILY = "Owned by Family"
+
+OWNED_BY_SELF = "Owned by Self"
+
 OWNED = "Not Owned"
 
 
@@ -24,15 +29,15 @@ class TestRuleSetDecision(TestCase):
             RuleSetDecision(["test_1", "test_2"])
 
     def test_evaluate(self):
-        age_gt_35 = NumericToken("age", Gt(35))
-        pet_in_dog_cat = StringToken("pet", In(["dog", "cat"]))
+        age_gt_35 = Expression(NumericToken("age"), Gt(35))
+        pet_in_dog_cat = Expression(StringToken("pet"), In(["dog", "cat"]))
         rule_row_decision_go = RuleRowDecision(
             WhenAll([age_gt_35, pet_in_dog_cat]),
             "GO"
         )
 
-        age_lte_35 = NumericToken("age", Lte(35))
-        pet_not_in_dog_cat = StringToken("pet", NotIn(["dog", "cat"]))
+        age_lte_35 = Expression(NumericToken("age"), Lte(35))
+        pet_not_in_dog_cat = Expression(StringToken("pet"), NotIn(["dog", "cat"]))
         rule_row_decision_no_go = RuleRowDecision(
             WhenAll([age_lte_35, pet_not_in_dog_cat]),
             "NO_GO"
@@ -45,9 +50,12 @@ class TestRuleSetDecision(TestCase):
         assert rule_set_decision.evaluate(fact_for_no_go) == "NO_GO"
 
     def test_evaluate_simple_decision(self):
-        cibil_score_between_650_800 = NumericToken("cibil_score", Between(floor=650, ceiling=800))
-        marital_status_in_married_unspecified = StringToken("marital_status", In(["Married", "Unspecified"]))
-        business_owned_by_self_family = StringToken("business_ownership", In(["Owned by Self", "Owned by Family"]))
+        cibil_score_between_650_800 = Expression(NumericToken("cibil_score"), Between(floor=650, ceiling=800))
+        marital_status_in_married_unspecified = Expression(StringToken("marital_status"), In(["Married", "Unspecified"]))
+        business_owned_by_self_family = Expression(
+            StringToken("business_ownership"),
+            In([OWNED_BY_SELF, OWNED_BY_FAMILY])
+        )
 
         rule_row_decision_go = RuleRowDecision(
             WhenAll([cibil_score_between_650_800, marital_status_in_married_unspecified, business_owned_by_self_family]),
@@ -55,13 +63,19 @@ class TestRuleSetDecision(TestCase):
         )
         rule_set_decision = RuleSetDecision([rule_row_decision_go])
 
-        fact = dict(cibil_score=700, marital_status="Married", business_ownership="Owned by Self")
+        fact = dict(cibil_score=700, marital_status="Married", business_ownership=OWNED_BY_SELF)
         assert rule_set_decision.evaluate(fact) == "GO"
 
     def test_evaluate_complex_decision(self):
-        applicant_age_gte_35 = NumericToken("applicant_age", Gte(35))
-        business_owned_by_self_family = StringToken("business_ownership", In(["Owned by Self", "Owned by Family"]))
-        applicant_owned_by_self_family = StringToken("applicant_ownership", In(["Owned by Self", "Owned by Family"]))
+        applicant_age_gte_35 = Expression(NumericToken("applicant_age"), Gte(35))
+        business_owned_by_self_family = Expression(
+            StringToken("business_ownership"),
+            In([OWNED_BY_SELF, OWNED_BY_FAMILY])
+        )
+        applicant_owned_by_self_family = Expression(
+            StringToken("applicant_ownership"),
+            In([OWNED_BY_SELF, OWNED_BY_FAMILY])
+        )
 
         rule_row_decision_go = RuleRowDecision(
             WhenAll(
@@ -71,11 +85,23 @@ class TestRuleSetDecision(TestCase):
         )
         rule_set_decision = RuleSetDecision([rule_row_decision_go])
 
-        fact_go = dict(applicant_age=42, applicant_ownership=OWNED, business_ownership="Owned by Self")
+        fact_go = dict(
+            applicant_age=42,
+            applicant_ownership=OWNED,
+            business_ownership="Owned by Self"
+        )
         assert rule_set_decision.evaluate(fact_go) == "GO"
 
-        fact_no_go_1 = dict(applicant_age=42, applicant_ownership=OWNED, business_ownership=OWNED)
+        fact_no_go_1 = dict(
+            applicant_age=42,
+            applicant_ownership=OWNED,
+            business_ownership=OWNED
+        )
         assert rule_set_decision.evaluate(fact_no_go_1) != "GO"
 
-        fact_no_go_2 = dict(applicant_age=25, applicant_ownership="Owned by Self", business_ownership="Owned by Self")
+        fact_no_go_2 = dict(
+            applicant_age=25,
+            applicant_ownership="Owned by Self",
+            business_ownership="Owned by Self"
+        )
         assert rule_set_decision.evaluate(fact_no_go_2) != "GO"
