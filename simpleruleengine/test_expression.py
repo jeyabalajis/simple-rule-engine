@@ -1,9 +1,9 @@
 from unittest import TestCase
-from simpleruleengine.token.StringToken import StringToken
-from simpleruleengine.token.NumericToken import NumericToken
-from simpleruleengine.token.RuleToken import RuleToken
-from simpleruleengine.operator.In import In
-from simpleruleengine.operator.Gte import Gte
+from simpleruleengine.token.string_token import StringToken
+from simpleruleengine.token.numeric_token import NumericToken
+from simpleruleengine.token.rule_token import RuleToken
+from simpleruleengine.operator.string_in import In
+from simpleruleengine.operator.greater_than_equal import Gte
 from simpleruleengine.expression.expression import Expression
 
 
@@ -18,7 +18,7 @@ class TestExpression(TestCase):
 
     def test_evaluate_string_token(self):
         string_token_pet = StringToken(name="pet")
-        pet_in_dog_cat = Expression(string_token_pet, In(["dog", "cat"]))
+        pet_in_dog_cat = Expression(string_token_pet, In("dog", "cat"))
 
         fact = dict(pet="cat")
         assert pet_in_dog_cat.evaluate(token_dict=fact) is True

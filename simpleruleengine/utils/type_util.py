@@ -19,7 +19,7 @@ def string(val) -> bool:
 def string_list(val) -> bool:
     """ string validates whether the value sent is a string
     :returns bool"""
-    if type(val).__name__ == 'list':
+    if type(val).__name__ in ('list', 'tuple'):
         for ind_val in val:
             if not string(ind_val):
                 return False

@@ -1,6 +1,7 @@
 from unittest import TestCase
-from simpleruleengine.operator.Between import Between
-from simpleruleengine.operator.Gte import Gte
+from simpleruleengine.operator.between import Between
+from simpleruleengine.operator.greater_than_equal import Gte
+from simpleruleengine.operator.string_in import In
 
 
 class TestOperator(TestCase):
@@ -15,4 +16,8 @@ class TestOperator(TestCase):
 
     def test_evaluate_gte_false(self):
         assert Gte(650).evaluate(649) is False
+
+    def test_evaluate_in_true(self):
+        assert In("dog", "cat").evaluate("dog") is True
+
 
