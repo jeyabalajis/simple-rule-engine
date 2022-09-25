@@ -127,7 +127,7 @@ if __name__ == "__main__":
         ),
         "GO"
     )
-    rule_set_decision = RuleSetDecision([rule_row_decision_go])
+    rule_set_decision = RuleSetDecision(rule_row_decision_go)
 
     fact = dict(
         cibil_score=700,
