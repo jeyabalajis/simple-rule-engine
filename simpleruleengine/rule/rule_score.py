@@ -1,10 +1,10 @@
-from simpleruleengine.ruleset.RuleSetScore import RuleSetScore
+from simpleruleengine.ruleset.rule_set_score import RuleSetScore
 from typing import List
 from simpleruleengine.rule.rule import Rule
 
 
 class RuleScore(Rule):
-    def __init__(self, rule_sets: List[RuleSetScore]):
+    def __init__(self, *rule_sets: RuleSetScore):
         super().__init__(rule_sets)
         self.rule_sets = rule_sets
 

@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import List
 from simpleruleengine.utils.type_util import is_dict
 
 
 class Rule(ABC):
-    def __init__(self, tokens: List):
+    def __init__(self, *tokens):
         self.rule_sets = tokens
 
     @abstractmethod

@@ -1,5 +1,5 @@
-from simpleruleengine.operator.Operator import Operator
-from simpleruleengine.token.Token import Token
+from simpleruleengine.operator.operator import Operator
+from simpleruleengine.token.token import Token
 
 
 class Expression:

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import Union
 
 from simpleruleengine.expression.expression import Expression
 from simpleruleengine.utils.type_util import is_dict
@@ -8,7 +8,7 @@ from simpleruleengine.utils.type_util import is_dict
 class Conditional(ABC):
     """ Conditional is an abstract base class for validating a set of Tokens or Conditionals """
 
-    def __init__(self, expressions: List[Expression]):
+    def __init__(self, *expressions):
         self.expressions = expressions
 
     @abstractmethod
