@@ -21,8 +21,6 @@ j
 +simpleruleengine/operator/StringOperator.py,6\d\6dafa591845302ca94693a717985af890e2bed88
 U
 %simpleruleengine/token/StringToken.py,e\8\e81eaf447ea36024855aba0574e96828d95e6a72
-W
-'simpleruleengine/schema/SchemaReader.py,9\2\92c5ffa7b6da2fed08433b05ac32fc7fbbb2d668
 d
 4simpleruleengine/schema/repo/conditional_schema.json,2\f\2f765fa1d67d5f99128c9ac5e2e1aab18f4f9d5a
 O
@@ -51,8 +49,6 @@ X
 (simpleruleengine/conditional/__init__.py,6\c\6c18f1381f6457e97d0ca451118b306e42df8cce
 V
 &simpleruleengine/token/NumericToken.py,5\e\5ecf511be0910becd6cd86cd9880e7b9cf4fa518
-\
-,simpleruleengine/schema/test_SchemaReader.py,b\9\b948c5b334fd3f31049ec506a4e8a0c700c8ae49
 P
  simpleruleengine/operator/Gte.py,3\a\3a8708c38c820808ba4b4c5ed2f43df499f41f59
 U
@@ -108,3 +104,9 @@ Y
 )simpleruleengine/expression/expression.py,9\6\96190bc2f64efd057f68af5bc7da678cbaeff09e
 S
 #simpleruleengine/test_expression.py,5\0\50a73d4fc3aa859d6ca62cf20a940fa08e856d9f
+]
+-simpleruleengine/schema/schema_file_reader.py,d\e\defb264b76188d056f6a6bd1506784732fc7c0b2
+[
++simpleruleengine/test_schema_file_reader.py,0\3\0340359d99203c2e7d9e1748cd0f28d6579be7d7
+?
+environment.yml,5\4\54c391de2500e0856c23737daf64f9d931569110

@@ -96,18 +96,47 @@ The simple-rule-engine allows the rules to be _“chained”_. I.e. you can buil
 
 ### Rule specification
 ```python
-cibil_score_between_650_800 = NumericToken("cibil_score", Between(floor=650, ceiling=800))
-marital_status_in_married_unspecified = StringToken("marital_status", In(["Married", "Unspecified"]))
-business_owned_by_self_family = StringToken("business_ownership", In(["Owned by Self", "Owned by Family"]))
+from simpleruleengine.conditional.when_all import WhenAll
+from simpleruleengine.expression.expression import Expression
+from simpleruleengine.operator.Between import Between
+from simpleruleengine.operator.In import In
+from simpleruleengine.rulerow.RuleRowDecision import RuleRowDecision
+from simpleruleengine.ruleset.RuleSetDecision import RuleSetDecision
+from simpleruleengine.token.NumericToken import NumericToken
+from simpleruleengine.token.StringToken import StringToken
 
-rule_row_decision_go = RuleRowDecision(
-    WhenAll([cibil_score_between_650_800, marital_status_in_married_unspecified, business_owned_by_self_family]),
-    "GO"
-)
-rule_set_decision = RuleSetDecision([rule_row_decision_go])
+if __name__ == "__main__":
+    cibil_score_between_650_800 = Expression(
+        NumericToken("cibil_score"),
+        Between(floor=650, ceiling=800)
+    )
+    marital_status_in_married_unspecified = Expression(
+        StringToken("marital_status"),
+        In(["Married", "Unspecified"])
+    )
+    business_owned_by_self_family = Expression(
+        StringToken("business_ownership"),
+        In(["Owned by Self", "Owned by Family"])
+    )
 
-fact = dict(cibil_score=700, marital_status="Married", business_ownership="Owned by Self")
-assert rule_set_decision.execute(fact) == "GO"
+    rule_row_decision_go = RuleRowDecision(
+        WhenAll([
+            cibil_score_between_650_800,
+            marital_status_in_married_unspecified,
+            business_owned_by_self_family
+        ]
+        ),
+        "GO"
+    )
+    rule_set_decision = RuleSetDecision([rule_row_decision_go])
+
+    fact = dict(
+        cibil_score=700,
+        marital_status="Married",
+        business_ownership="Owned by Self"
+    )
+
+    assert rule_set_decision.evaluate(fact) == "GO"
 ```
 
 ## A complex decision tree involving multiple AND  and OR conditions
@@ -132,26 +161,62 @@ assert rule_set_decision.execute(fact) == "GO"
 
 ### Rule specification
 ```python
-applicant_age_gte_35 = NumericToken("applicant_age", Gte(35))
-business_owned_by_self_family = StringToken("business_ownership", In(["Owned by Self", "Owned by Family"]))
-applicant_owned_by_self_family = StringToken("applicant_ownership", In(["Owned by Self", "Owned by Family"]))
+from simpleruleengine.conditional.when_all import WhenAll
+from simpleruleengine.conditional.when_any import WhenAny
+from simpleruleengine.expression.expression import Expression
+from simpleruleengine.operator.Gte import Gte
+from simpleruleengine.operator.In import In
+from simpleruleengine.rulerow.RuleRowDecision import RuleRowDecision
+from simpleruleengine.ruleset.RuleSetDecision import RuleSetDecision
+from simpleruleengine.token.NumericToken import NumericToken
+from simpleruleengine.token.StringToken import StringToken
 
-rule_row_decision_go = RuleRowDecision(
-    WhenAll(
-        [applicant_age_gte_35, WhenAny([business_owned_by_self_family, applicant_owned_by_self_family])]
-    ),
-    "GO"
-)
-rule_set_decision = RuleSetDecision([rule_row_decision_go])
+if __name__ == "__main__":
+    applicant_age_gte_35 = Expression(
+        NumericToken("applicant_age"),
+        Gte(35)
+    )
+    business_owned_by_self_family = Expression(
+        StringToken("business_ownership"),
+        In(["Owned by Self", "Owned by Family"])
+    )
+    applicant_owned_by_self_family = Expression(
+        StringToken("applicant_ownership"),
+        In(["Owned by Self", "Owned by Family"])
+    )
 
-fact_go = dict(applicant_age=42, applicant_ownership="Not Owned", business_ownership="Owned by Self")
-assert rule_set_decision.execute(fact_go) == "GO"
+    rule_row_decision_go = RuleRowDecision(
+        WhenAll(
+            [
+                applicant_age_gte_35,
+                WhenAny([business_owned_by_self_family,
+                        applicant_owned_by_self_family])
+            ]
+        ),
+        "GO"
+    )
+    rule_set_decision = RuleSetDecision([rule_row_decision_go])
 
-fact_no_go_1 = dict(applicant_age=42, applicant_ownership="Not Owned", business_ownership="Not Owned")
-assert rule_set_decision.execute(fact_no_go_1) != "GO"
+    fact_go = dict(
+        applicant_age=42,
+        applicant_ownership="Not Owned",
+        business_ownership="Owned by Self"
+    )
+    assert rule_set_decision.evaluate(fact_go) == "GO"
 
-fact_no_go_2 = dict(applicant_age=25, applicant_ownership="Owned by Self", business_ownership="Owned by Self")
-assert rule_set_decision.execute(fact_no_go_2) != "GO"
+    fact_no_go_1 = dict(
+        applicant_age=42,
+        applicant_ownership="Not Owned",
+        business_ownership="Not Owned"
+    )
+    assert rule_set_decision.evaluate(fact_no_go_1) != "GO"
+
+    fact_no_go_2 = dict(
+        applicant_age=25,
+        applicant_ownership="Owned by Self",
+        business_ownership="Owned by Self"
+    )
+    assert rule_set_decision.evaluate(fact_no_go_2) != "GO"
 ```
 
 ## A scoring rule involving multiple parameters
@@ -180,99 +245,232 @@ assert rule_set_decision.execute(fact_no_go_2) != "GO"
 
 ### Rule Specification
 ```python
-no_run_bl_pl_gte_7_score_minus_100 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(7))]), -100)
-no_run_bl_pl_gte_4_score_minus_40 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(4))]), -40)
-no_run_bl_pl_gte_2_score_30 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(2))]), 30)
-no_run_bl_pl_gte_0_score_100 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(0))]), 100)
+from simpleruleengine.conditional.when_all import WhenAll
+from simpleruleengine.conditional.when_any import WhenAny
+from simpleruleengine.expression.expression import Expression
+from simpleruleengine.operator.Gte import Gte
+from simpleruleengine.operator.Gt import Gt
+from simpleruleengine.operator.Eq import Eq
+from simpleruleengine.operator.Lt import Lt
+from simpleruleengine.operator.Lte import Lte
+from simpleruleengine.rulerow.RuleRowScore import RuleRowScore
+from simpleruleengine.ruleset.RuleSetScore import RuleSetScore
+from simpleruleengine.rule.rule_score import RuleScore
+from simpleruleengine.token.NumericToken import NumericToken
 
-no_of_run_bl_pl_rule_set = RuleSetScore(
-    [no_run_bl_pl_gte_7_score_minus_100, no_run_bl_pl_gte_4_score_minus_40,
-     no_run_bl_pl_gte_2_score_30, no_run_bl_pl_gte_0_score_100],
-    0.5
-)
+if __name__ == "__main__":
+    no_run_bl_pl_gte_7_score_minus_100 = RuleRowScore(
+        WhenAll(
+            [NumericToken("no_of_running_bl_pl", Gte(7))]
+        ),
+        -100
+    )
+    no_run_bl_pl_gte_4_score_minus_40 = RuleRowScore(
+        WhenAll(
+            [NumericToken("no_of_running_bl_pl", Gte(4))]
+        ),
+        -40
+    )
+    no_run_bl_pl_gte_2_score_30 = RuleRowScore(
+        WhenAll(
+            [NumericToken("no_of_running_bl_pl", Gte(2))]
+        ),
+        30
+    )
+    no_run_bl_pl_gte_0_score_100 = RuleRowScore(
+        WhenAll(
+            [NumericToken("no_of_running_bl_pl", Gte(0))]
+        ),
+        100
+    )
 
-fact_no_run_bl_pl_2 = dict(no_of_running_bl_pl=2)
-assert no_of_run_bl_pl_rule_set.execute(fact_no_run_bl_pl_2) == 15.0
+    no_of_run_bl_pl_rule_set = RuleSetScore(
+        [no_run_bl_pl_gte_7_score_minus_100, no_run_bl_pl_gte_4_score_minus_40,
+         no_run_bl_pl_gte_2_score_30, no_run_bl_pl_gte_0_score_100],
+        0.5
+    )
 
-last_loan_drawn_in_months_eq_0_score_30 = RuleRowScore(
-    WhenAll([NumericToken("last_loan_drawn_in_months", Eq(0))]),
-    30
-)
-last_loan_drawn_in_months_lt_3_score_minus_30 = RuleRowScore(
-    WhenAll([NumericToken("last_loan_drawn_in_months", Lt(3))]),
-    -30
-)
-last_loan_drawn_in_months_lte_12_score_40 = RuleRowScore(
-    WhenAll([NumericToken("last_loan_drawn_in_months", Lte(12))]),
-    40
-)
-last_loan_drawn_in_months_gt_12_score_100 = RuleRowScore(
-    WhenAll([NumericToken("last_loan_drawn_in_months", Gt(12))]),
-    100
-)
+    fact_no_run_bl_pl_2 = dict(no_of_running_bl_pl=2)
+    assert no_of_run_bl_pl_rule_set.execute(fact_no_run_bl_pl_2) == 15.0
 
-last_loan_drawn_in_months_rule_set = RuleSetScore(
-    [
-        last_loan_drawn_in_months_eq_0_score_30,
-        last_loan_drawn_in_months_lt_3_score_minus_30,
-        last_loan_drawn_in_months_lte_12_score_40,
-        last_loan_drawn_in_months_gt_12_score_100
-    ],
-    0.5
-)
+    last_loan_drawn_in_months_eq_0_score_30 = RuleRowScore(
+        WhenAll([NumericToken("last_loan_drawn_in_months", Eq(0))]),
+        30
+    )
+    last_loan_drawn_in_months_lt_3_score_minus_30 = RuleRowScore(
+        WhenAll([NumericToken("last_loan_drawn_in_months", Lt(3))]),
+        -30
+    )
+    last_loan_drawn_in_months_lte_12_score_40 = RuleRowScore(
+        WhenAll([NumericToken("last_loan_drawn_in_months", Lte(12))]),
+        40
+    )
+    last_loan_drawn_in_months_gt_12_score_100 = RuleRowScore(
+        WhenAll([NumericToken("last_loan_drawn_in_months", Gt(12))]),
+        100
+    )
 
-fact_last_loan_drawn_in_months_lte_12 = dict(last_loan_drawn_in_months=6)
-assert last_loan_drawn_in_months_rule_set.execute(fact_last_loan_drawn_in_months_lte_12) == 20.0
+    last_loan_drawn_in_months_rule_set = RuleSetScore(
+        [
+            last_loan_drawn_in_months_eq_0_score_30,
+            last_loan_drawn_in_months_lt_3_score_minus_30,
+            last_loan_drawn_in_months_lte_12_score_40,
+            last_loan_drawn_in_months_gt_12_score_100
+        ],
+        0.5
+    )
 
-fact_rule_score = dict(last_loan_drawn_in_months=6, no_of_running_bl_pl=2)
-rule_score = RuleScore([no_of_run_bl_pl_rule_set, last_loan_drawn_in_months_rule_set])
-assert rule_score.execute(fact_rule_score) == 35.0
+    fact_last_loan_drawn_in_months_lte_12 = dict(last_loan_drawn_in_months=6)
+    assert last_loan_drawn_in_months_rule_set.execute(
+        fact_last_loan_drawn_in_months_lte_12) == 20.0
 
-no_run_bl_pl_gte_7_score_minus_100 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(7))]), -100)
-no_run_bl_pl_gte_4_score_minus_40 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(4))]), -40)
-no_run_bl_pl_gte_2_score_30 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(2))]), 30)
-no_run_bl_pl_gte_0_score_100 = RuleRowScore(WhenAll([NumericToken("no_of_running_bl_pl", Gte(0))]), 100)
+    fact_rule_score = dict(last_loan_drawn_in_months=6, no_of_running_bl_pl=2)
+    rule_score = RuleScore(
+        [no_of_run_bl_pl_rule_set, last_loan_drawn_in_months_rule_set])
+    assert rule_score.execute(fact_rule_score) == 35.0
 
-no_of_run_bl_pl_rule_set = RuleSetScore(
-    [no_run_bl_pl_gte_7_score_minus_100, no_run_bl_pl_gte_4_score_minus_40,
-     no_run_bl_pl_gte_2_score_30, no_run_bl_pl_gte_0_score_100],
-    0.5
-)
+    no_run_bl_pl_gte_7_score_minus_100 = RuleRowScore(
+        WhenAll([NumericToken("no_of_running_bl_pl", Gte(7))]), -100)
+    no_run_bl_pl_gte_4_score_minus_40 = RuleRowScore(
+        WhenAll([NumericToken("no_of_running_bl_pl", Gte(4))]), -40)
+    no_run_bl_pl_gte_2_score_30 = RuleRowScore(
+        WhenAll([NumericToken("no_of_running_bl_pl", Gte(2))]), 30)
+    no_run_bl_pl_gte_0_score_100 = RuleRowScore(
+        WhenAll([NumericToken("no_of_running_bl_pl", Gte(0))]), 100)
 
-fact_no_run_bl_pl_2 = dict(no_of_running_bl_pl=2)
-assert no_of_run_bl_pl_rule_set.execute(fact_no_run_bl_pl_2) == 15.0
+    no_of_run_bl_pl_rule_set = RuleSetScore(
+        [no_run_bl_pl_gte_7_score_minus_100, no_run_bl_pl_gte_4_score_minus_40,
+         no_run_bl_pl_gte_2_score_30, no_run_bl_pl_gte_0_score_100],
+        0.5
+    )
 
-last_loan_drawn_in_months_eq_0_score_30 = RuleRowScore(
-    WhenAll([NumericToken("last_loan_drawn_in_months", Eq(0))]),
-    30
-)
-last_loan_drawn_in_months_lt_3_score_minus_30 = RuleRowScore(
-    WhenAll([NumericToken("last_loan_drawn_in_months", Lt(3))]),
-    -30
-)
-last_loan_drawn_in_months_lte_12_score_40 = RuleRowScore(
-    WhenAll([NumericToken("last_loan_drawn_in_months", Lte(12))]),
-    40
-)
-last_loan_drawn_in_months_gt_12_score_100 = RuleRowScore(
-    WhenAll([NumericToken("last_loan_drawn_in_months", Gt(12))]),
-    100
-)
+    fact_no_run_bl_pl_2 = dict(no_of_running_bl_pl=2)
+    assert no_of_run_bl_pl_rule_set.execute(fact_no_run_bl_pl_2) == 15.0
 
-last_loan_drawn_in_months_rule_set = RuleSetScore(
-    [
-        last_loan_drawn_in_months_eq_0_score_30,
-        last_loan_drawn_in_months_lt_3_score_minus_30,
-        last_loan_drawn_in_months_lte_12_score_40,
-        last_loan_drawn_in_months_gt_12_score_100
-    ],
-    0.5
-)
+    last_loan_drawn_in_months_eq_0_score_30 = RuleRowScore(
+        WhenAll([NumericToken("last_loan_drawn_in_months", Eq(0))]),
+        30
+    )
+    last_loan_drawn_in_months_lt_3_score_minus_30 = RuleRowScore(
+        WhenAll([NumericToken("last_loan_drawn_in_months", Lt(3))]),
+        -30
+    )
+    last_loan_drawn_in_months_lte_12_score_40 = RuleRowScore(
+        WhenAll([NumericToken("last_loan_drawn_in_months", Lte(12))]),
+        40
+    )
+    last_loan_drawn_in_months_gt_12_score_100 = RuleRowScore(
+        WhenAll([NumericToken("last_loan_drawn_in_months", Gt(12))]),
+        100
+    )
 
-fact_last_loan_drawn_in_months_lte_12 = dict(last_loan_drawn_in_months=6)
-assert last_loan_drawn_in_months_rule_set.execute(fact_last_loan_drawn_in_months_lte_12) == 20.0
+    last_loan_drawn_in_months_rule_set = RuleSetScore(
+        [
+            last_loan_drawn_in_months_eq_0_score_30,
+            last_loan_drawn_in_months_lt_3_score_minus_30,
+            last_loan_drawn_in_months_lte_12_score_40,
+            last_loan_drawn_in_months_gt_12_score_100
+        ],
+        0.5
+    )
 
-fact_rule_score = dict(last_loan_drawn_in_months=6, no_of_running_bl_pl=2)
-rule_score = RuleScore([no_of_run_bl_pl_rule_set, last_loan_drawn_in_months_rule_set])
-assert rule_score.execute(fact_rule_score) == 35.0
+    fact_last_loan_drawn_in_months_lte_12 = dict(last_loan_drawn_in_months=6)
+    assert last_loan_drawn_in_months_rule_set.execute(
+        fact_last_loan_drawn_in_months_lte_12) == 20.0
+
+    fact_rule_score = dict(last_loan_drawn_in_months=6, no_of_running_bl_pl=2)
+    rule_score = RuleScore(
+        [no_of_run_bl_pl_rule_set, last_loan_drawn_in_months_rule_set])
+    assert rule_score.execute(fact_rule_score) == 35.0
+```
+
+## A nested rule that involves another rule for evaulation
+
+### Rule
+
+- If cibil score is between 650 and 800, score is 100
+- If cibil score is less than 650, score is 0
+- Decide GO if pet in [dog, cat] and cibil score is greater than 0  
+
+### Rule Specification
+```python
+from simpleruleengine.conditional.when_all import WhenAll
+from simpleruleengine.expression.expression import Expression
+from simpleruleengine.operator.Between import Between
+from simpleruleengine.operator.Gt import Gt
+from simpleruleengine.operator.Gte import Gte
+from simpleruleengine.operator.In import In
+from simpleruleengine.operator.Lte import Lte
+from simpleruleengine.operator.Lt import Lt
+from simpleruleengine.operator.NotIn import NotIn
+from simpleruleengine.rulerow.RuleRowDecision import RuleRowDecision
+from simpleruleengine.ruleset.RuleSetDecision import RuleSetDecision
+from simpleruleengine.rulerow.RuleRowScore import RuleRowScore
+from simpleruleengine.ruleset.RuleSetScore import RuleSetScore
+from simpleruleengine.token.NumericToken import NumericToken
+from simpleruleengine.token.StringToken import StringToken
+from simpleruleengine.token.RuleToken import RuleToken
+from simpleruleengine.rule.rule_score import RuleScore
+
+if __name__ == "__main__":
+    cibil_score_between_650_800 = Expression(
+        NumericToken("cibil_score"),
+        Between(floor=650, ceiling=800)
+    )
+
+    cibil_score_lt_650 = Expression(
+        NumericToken("cibil_score"),
+        Lt(650)
+    )
+
+    rule_row_between_650_800 = RuleRowScore(
+        antecedent=WhenAll([cibil_score_between_650_800]),
+        consequent=100
+    )
+
+    rule_row_between_lt_650 = RuleRowScore(
+        antecedent=WhenAll([cibil_score_lt_650]),
+        consequent=0
+    )
+
+    rule_set_cibil_score = RuleSetScore(
+        rule_rows=[rule_row_between_lt_650, rule_row_between_650_800],
+        weight=1
+    )
+
+    rule_cibil_score = RuleScore(
+        rule_sets=[rule_set_cibil_score]
+    )
+
+    fact = dict(cibil_score=350)
+    assert rule_cibil_score.execute(fact) == 0
+
+    expression_pet_in_dog_cat = Expression(
+        StringToken(name="pet"),
+        In(["dog", "cat"])
+    )
+
+    expression_cibil_score_gt_0 = Expression(
+        RuleToken(name="cibil_rule", rule=rule_cibil_score),
+        Gt(0)
+    )
+
+    when_all_cibil_and_pet = WhenAll(
+        [expression_cibil_score_gt_0, expression_pet_in_dog_cat]
+    )
+
+    rule_row_go_cibil_and_pet = RuleRowDecision(
+        antecedent=when_all_cibil_and_pet,
+        consequent="GO"
+    )
+
+    rule_set_decision_cibil_score_and_pet = RuleSetDecision(
+        rule_rows=[rule_row_go_cibil_and_pet]
+    )
+
+    fact = dict(cibil_score=350, pet="dog")
+    assert rule_set_decision_cibil_score_and_pet.evaluate(fact) != "GO"
+
+    fact = dict(cibil_score=725, pet="dog")
+    assert rule_set_decision_cibil_score_and_pet.evaluate(fact) == "GO"
 ```
