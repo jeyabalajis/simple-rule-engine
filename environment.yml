@@ -14,7 +14,6 @@ dependencies:
   - more-itertools=8.5.0=py_0
   - openssl=1.1.1l=h8ffe710_0
   - packaging=20.4=py_0
-  - pip=20.2.4=py37haa95532_0
   - pluggy=0.13.1=py37_0
   - py=1.9.0=py_0
   - pyparsing=2.4.7=py_0
@@ -32,4 +31,5 @@ dependencies:
   - wincertstore=0.2=py37_0
   - zipp=3.4.0=pyhd3eb1b0_0
   - zlib=1.2.11=h62dcd97_4
-prefix: C:\Users\jeyab\Anaconda3\envs\simple-rule-engine
+  - pip:
+    - pip==22.2.2
