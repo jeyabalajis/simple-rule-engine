@@ -40,14 +40,15 @@ The aforementioned decisions involve evaluation of multiple parameters. You simp
 
 > The rules can be authored through a separate UI and stored as rule template in a database. The rule engine then _can be treated as a service_ and just by passing all the facts (a.k.a inputs), we get the the corresponding decisions or scores (output). 
 
-> The caller of the rule engine is agnostic of the business logic behiond rule evaluation.
+> The caller of the rule engine is agnostic of the business logic behind rule evaluation.
 
 ### Benefits
 
-- Declarative authoring of rules. This can be done by a business analyst, rather than a developer. The developer just focuses on extracting the facts that are required to be passed into the engine.
-- Versioning of rules to enable the auditing of the rule changes over a period of time.
+- Declarative authoring of rules. This can be done by a business analyst, rather than a developer. The authoring can be facilitated through a UI as well. 
+- The developer just focuses on extracting the facts that are required to be passed into the engine.
 - Once composed, rules can be serialized as a json and persisted into database for repeated use.
-- Segregate business logic from the data 
+- Versioning of rules to enable the auditing of the rule changes over a period of time.
+- Segregate business logic from the data.
 
 # Concepts
 
