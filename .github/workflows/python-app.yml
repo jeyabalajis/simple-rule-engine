@@ -28,8 +28,7 @@ jobs:
         python -m pip install --upgrade pip
         $CONDA/bin/conda install flake8
         $CONDA/bin/conda config --set restore_free_channel true
-        $CONDA/bin/conda env create -f etc
-        $CONDA/bin/conda env update --file environment.yml
+        $CONDA/bin/conda env create -f environment.yml
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
