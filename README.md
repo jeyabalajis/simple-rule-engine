@@ -6,7 +6,13 @@ A __lightweight__ yet __powerful__ rule engine that allows declarative specifica
 1. Ability to __declaratively__ author both Scoring and Decision Rules.
 2. Ability to __version control__ rule declarations thus enabling auditing of rule changes over a period of time.
 3. Ability to author **_chained rules_**. Evaluation of one rule can refer to the result of another rule, thus enabling 
-modular, hierarchical rules. 
+modular, hierarchical rules.
+
+## Installation
+
+```commandline
+pip install simpleruleengine==2.0.0
+``` 
 
 # Table of Contents
 - [Why Rule Engine](#why-rule-engine)
@@ -14,6 +20,7 @@ modular, hierarchical rules.
 - [Examples](#Examples)
 
 # Why Rule Engine?
+
 Decision making has always been at the heart of any business. In certain industries (such as Lending), some of the decisions made are so dynamic & at a flux that programming these decisions by hand is counter-productive.
 
 Take the example of the decision of giving someone a loan. It primarily involves ascertaining two fundamental factors:
@@ -38,6 +45,8 @@ The aforementioned decisions involve evaluation of multiple parameters. You simp
 
 - Declarative authoring of rules. This can be done by a business analyst, rather than a developer. The developer just focuses on extracting the facts that are required to be passed into the engine.
 - Versioning of rules to enable the auditing of the rule changes over a period of time.
+- Once composed, rules can be serialized as a json and persisted into database for repeated use.
+- Segregate business logic from the data 
 
 # Concepts
 
