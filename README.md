@@ -15,6 +15,10 @@ modular, hierarchical rules.
 pip install simpleruleengine==2.0.0
 ``` 
 
+## Source Code
+
+[simple-rule-engine GitHub Repository](https://github.com/jeyabalajis/simple-rule-engine)
+
 # Table of Contents
 - [Why Rule Engine](#why-rule-engine)
 - [Concepts](#Concepts)
