@@ -1,6 +1,7 @@
 # simple-rule-engine
 
 A __lightweight__ yet __powerful__ rule engine that allows declarative specification of business rules and **saves tons of repeated development work**.
+This library has been packaged under this [pypi repository](https://pypi.org/project/simpleruleengine/2.0.0/)
 
 ## Key Features
 1. Ability to __declaratively__ author both Scoring and Decision Rules.
