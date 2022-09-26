@@ -22,7 +22,7 @@ pip install simpleruleengine==2.0.0
 
 # Why Rule Engine?
 
-Decision making has always been at the heart of any business. In certain industries (such as Lending), some of the decisions made are so dynamic & at a flux that programming these decisions by hand is counter-productive.
+Decision making has always been at the heart of any business. In certain industries (such as Lending), some of the decisions made are so dynamic & at a flux that programming these decisions by hand is counter-productive. See [here](https://martinfowler.com/bliki/RulesEngine.html) for additional context.
 
 Take the example of the decision of giving someone a loan. It primarily involves ascertaining two fundamental factors:
 - Ability to repay the loan.
