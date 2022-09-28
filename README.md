@@ -4,7 +4,8 @@ A __lightweight__ yet __powerful__ rule engine that allows declarative specifica
 This library has been packaged under this [pypi repository](https://pypi.org/project/simpleruleengine/2.0.0/)
 
 ## Key Features
-1. Ability to __declaratively__ author both Scoring and Decision Rules.
+1. Ability to __declaratively__ author both Scoring and Decision Rules. 
+2. The library offers composable functional syntax that can be extended with various format adapters. See [here](https://github.com/jeyabalajis/simple-serverless-rule-engine) for an example of such an extension. 
 2. Ability to __version control__ rule declarations thus enabling auditing of rule changes over a period of time.
 3. Ability to author **_chained rules_**. Evaluation of one rule can refer to the result of another rule, thus enabling 
 modular, hierarchical rules.
