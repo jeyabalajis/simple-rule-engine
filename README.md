@@ -217,6 +217,7 @@ WhenAll(
 
 - A rule composes one or many Rule sets.
 - For a score, the total score is calculated as sum(rule set score * weight).
+- A rule exposes `get_token_dict_structure` function that returns a dictionary of all facts required for the rule to be executed successfully.
 
 # Examples
 
