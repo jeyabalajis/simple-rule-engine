@@ -70,8 +70,9 @@ pip install simpleruleengine==2.0.0
 
 # Table of Contents
 - [Why Rule Engine](#why-rule-engine)
-- [Concepts](#Concepts)
-- [Examples](#Examples)
+- [Concepts](#concepts)
+- [Grammar](#grammar)
+- [Examples](#examples)
 
 # Why Rule Engine?
 
@@ -147,6 +148,76 @@ The simple-rule-engine allows the rules to be _“chained”_. I.e. you can buil
 - You can perform complex evaluations involving multiple facts combining AND and OR conditions recursively in the antecedent. See [Examples](#Examples).
 - The system allows a total recursion depth of 5 to allow complex evaluations.
 - A rule can be an antecedent. This allows one rule to use another rule as part of evaulation. 
+
+# Grammar
+
+## Token: 
+
+An entity that is representative of a fact, and also guides clients on the data type of fact to be supplied. It can be a NumericToken or StringToken or BooleanToken etc. 
+
+Example: ```StringToken("pet")``` represents a token pet of type String.
+
+> A rule can be a Token too. A RuleToken implements Token and composes a Rule. When asked for value, a RuleToken executes the rule it composes and provides the value.  
+## Operator: 
+
+An Operator composes a base value and evaluates against a value supplied. 
+
+Example: ```Gte(35).evaulate(15)``` returns False. ```Gte(35.0).evaulate(40.0)``` returns True.
+
+## Expression:
+
+An Expression composes a Token on the left hand side (LHS), Operator in the middle and the data to be evaulated on the right hand side (RHS).
+
+Example: ```Expression(NumericToken("cibil_score"), Between(floor=650, ceiling=800))``` represents an evaulation that compares whether the fact _cibil_score_ is between 650 and 800 or not. Specified in SQL terms, this translates to ```WHERE cibil_score between 650 and 800```.
+
+```Expression(NumericToken("cibil_score"), Between(floor=650, ceiling=800)).evaluate(dict(cibil_score=700))``` evaluates to True.
+
+## Conditional: 
+
+- A Conditional composes a list of Expressions. 
+- WhenAll evaluates to True when _all_ expressions evaluate to True. 
+- WhenAny evaluates to True when _any_ expression evaluates to True. 
+- A Conditional can compose a Conditional - this enables clients to express complex conditions. 
+
+Example: 
+```python
+cibil_score_between_650_800 = Expression(NumericToken("cibil_score"), Between(floor=650, ceiling=800))
+marital_status_in_married_unspecified = Expression(StringToken("marital_status"), In("Married", "Unspecified"))
+business_owned_by_self_family = Expression(StringToken("business_ownership"), In("Owned by Self", "Owned by Family"))
+
+WhenAll(
+    cibil_score_between_650_800,
+    marital_status_in_married_unspecified,
+    business_owned_by_self_family
+)
+
+# A Conditional composing another Conditional. The below statement is equivalent of 
+# WHERE applicant_age >= 35 AND ( business_ownership in ('SELF', 'FAMILY') OR applicant_ownership in ('SELF', 'FAMILY') )
+WhenAll(
+    applicant_age_gte_35,
+    WhenAny(
+        business_owned_by_self_family,
+        applicant_owned_by_self_family
+    )
+),
+```
+
+## RuleRowDecision/RuleRowScore: 
+
+- A RuleRow composes a Conditional (as an antecedent) and specifies a consequent (result) when antecedent evaluates to True. 
+- For a Score, consequent must be a float. 
+- For a Decision, consequent can be anything.
+
+## RuleSetDecision/RuleSetScore: 
+
+- A Rule Set composes a set of RuleRows. 
+- For a score, each rule set carries a _weight_ and the total weight of all rule sets must be equal to 1.
+- For a decision, there must be only one rule set.
+
+## RuleDecision/RuleScore: 
+
+- A rule composes one or many Rule sets.
+- For a score, the total score is calculated as sum(rule set score * weight).
 
 # Examples
 
