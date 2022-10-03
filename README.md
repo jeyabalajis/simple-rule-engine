@@ -5,6 +5,8 @@ A __lightweight__ yet __powerful__ rule engine that allows declarative specifica
 - This library has been utilized in authoring & evaluation of a number of complex credit decisioning, upgrade/downgrade, and lender evaulation criteria rules at [FundsCorner](https://medium.com/fundscornertech)
 - This library can also be considered as a _Policy Framework_ for validating IaC (Infrastructure as Code).
 
+[![CodeFactor](https://www.codefactor.io/repository/github/jeyabalajis/simple-rule-engine/badge)](https://www.codefactor.io/repository/github/jeyabalajis/simple-rule-engine)
+
 ## At a glance
 
 simple-rule-engine is a Python library that enables declarative specification of decision or scoring rules.
