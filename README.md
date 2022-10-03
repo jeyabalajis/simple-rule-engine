@@ -130,7 +130,7 @@ The simple-rule-engine allows the rules to be _“chained”_. I.e. you can buil
 - A rule set is composed of one or many rule rows. 
 - You can ‘roughly’ think of each Rule Row as a Conditional evaluation of the facts (a.k.a antecedent) & a score based on these conditions (a.k.a consequent).
  
-![Score Rule Concept](/images/score_rule.png)
+![image](https://user-images.githubusercontent.com/15995686/193492161-71f5faf5-e206-4543-a005-7681b79fe689.png)
 
 ### Decision rule:
 
@@ -141,7 +141,7 @@ The simple-rule-engine allows the rules to be _“chained”_. I.e. you can buil
 - The decision can be anything (a numeric, a string such as YES/NO or even a JSON)
 - Once a Rule Row evaluates to True, the corresponding decision is returned immediately. 
 
-![Decision Rule Concept](/images/decision_rule.png)
+![image](https://user-images.githubusercontent.com/15995686/193492209-52bfa8fa-eb27-4805-bf95-cc7723b26a51.png)
 
 ### Antecedent and Consequent
 
@@ -156,9 +156,17 @@ The simple-rule-engine allows the rules to be _“chained”_. I.e. you can buil
 
 ## Token: 
 
-An entity that is representative of a fact, and also guides clients on the data type of fact to be supplied. It can be a NumericToken or StringToken or BooleanToken etc. 
+An entity that is representative of a fact, and also guides clients on the data type of fact to be supplied.
 
-Example: ```StringToken("pet")``` represents a token pet of type String.
+Types of Tokens:
+- NumericToken
+- StringToken
+- BooleanToken
+- RuleToken: A rule itself, composed as a Token
+
+Example: 
+- ```StringToken("pet")``` represents a token _pet_ of type String.
+- ```NumericToken("age")``` represents a token _age_ of type Numeric.
 
 > A rule can be a Token too. A RuleToken implements Token and composes a Rule. When asked for value, a RuleToken executes the rule it composes and provides the value.  
 ## Operator: 
@@ -171,7 +179,8 @@ Example: ```Gte(35).evaulate(15)``` returns False. ```Gte(35.0).evaulate(40.0)``
 
 An Expression composes a Token on the left hand side (LHS), Operator in the middle and the data to be evaulated on the right hand side (RHS).
 
-Example: ```Expression(NumericToken("cibil_score"), Between(floor=650, ceiling=800))``` represents an evaulation that compares whether the fact _cibil_score_ is between 650 and 800 or not. Specified in SQL terms, this translates to ```WHERE cibil_score between 650 and 800```.
+Example: 
+```Expression(NumericToken("cibil_score"), Between(floor=650, ceiling=800))``` represents an evaulation that compares whether the fact _cibil_score_ is between 650 and 800 or not. Specified in SQL terms, this translates to ```WHERE cibil_score between 650 and 800```.
 
 ```Expression(NumericToken("cibil_score"), Between(floor=650, ceiling=800)).evaluate(dict(cibil_score=700))``` evaluates to True.
 
@@ -181,6 +190,7 @@ Example: ```Expression(NumericToken("cibil_score"), Between(floor=650, ceiling=8
 - WhenAll evaluates to True when _all_ expressions evaluate to True. 
 - WhenAny evaluates to True when _any_ expression evaluates to True. 
 - A Conditional can compose a Conditional - this enables clients to express complex conditions. 
+- A Conditional can be further extended to implement NotWhenAll or NotWhenAny etc. as well.
 
 Example: 
 ```python
