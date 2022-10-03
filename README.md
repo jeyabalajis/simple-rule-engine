@@ -1,7 +1,9 @@
 # simple-rule-engine
 
 A __lightweight__ yet __powerful__ rule engine that allows declarative specification of business rules and **saves tons of repeated development work**.
-This library has been packaged under this [pypi repository](https://pypi.org/project/simpleruleengine/2.0.0/)
+
+- This library has been utilized in authoring & evaluation of a number of complex credit decisioning, upgrade/downgrade, and lender evaulation criteria rules at [FundsCorner](https://medium.com/fundscornertech)
+- This library can also be considered as a _Policy Framework_ for validating IaC (Infrastructure as Code).
 
 ## At a glance
 
@@ -60,9 +62,11 @@ modular, hierarchical rules.
 
 ## Installation
 
+[pypi repository](https://pypi.org/project/simpleruleengine/2.0.0/)
+
 ```commandline
 pip install simpleruleengine==2.0.0
-``` 
+```
 
 ## Source Code
 
@@ -96,12 +100,12 @@ The aforementioned decisions involve evaluation of multiple parameters. You simp
 
 > The caller of the rule engine is agnostic of the business logic behind rule evaluation.
 
-### Benefits
+## Benefits
 
-- Declarative authoring of rules. This can be done by a business analyst, rather than a developer. The authoring can be facilitated through a UI as well. 
-- The developer just focuses on extracting the facts that are required to be passed into the engine.
+- Declarative authoring of rules. This can be done by a business analyst, and can be facilitated through a UI. 
 - Once composed, rules can be serialized as a json and persisted into database for repeated use.
-- Versioning of rules to enable the auditing of the rule changes over a period of time.
+- The developer just focuses on extracting the facts that are required to be passed into the engine.
+- Ability to version a rule and audit rule changes over a period of time.
 - Segregate business logic from the data.
 
 # Concepts
