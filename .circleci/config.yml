@@ -1,0 +1,19 @@
+version: '2.1'
+orbs:
+  python: circleci/python@1.0.0
+jobs:
+  build:
+    executor: python/default
+    steps:
+      - checkout
+      - python/install-packages:
+          args: pytest
+          pkg-manager: pipenv
+      - run:
+          command: |
+            pipenv run pytest --version
+          name: Test it
+workflows:
+  main:
+    jobs:
+      - build
