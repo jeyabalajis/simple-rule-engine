@@ -11,7 +11,7 @@ jobs:
           pkg-manager: pipenv
       - run:
           command: |
-            pipenv run pytest --version
+            pipenv run pytest .
           name: Test it
 workflows:
   main:
