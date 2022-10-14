@@ -6,6 +6,7 @@ A __lightweight__ yet __powerful__ rule engine that allows declarative specifica
 - This library can also be considered as a _Policy Framework_ for validating IaC (Infrastructure as Code).
 
 [![CodeFactor](https://www.codefactor.io/repository/github/jeyabalajis/simple-rule-engine/badge)](https://www.codefactor.io/repository/github/jeyabalajis/simple-rule-engine)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/jeyabalajis/simple-rule-engine/tree/main.svg?style=shield)](https://dl.circleci.com/status-badge/redirect/gh/jeyabalajis/simple-rule-engine/tree/main)
 
 ## At a glance
 
