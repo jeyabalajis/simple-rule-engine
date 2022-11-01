@@ -2,8 +2,7 @@ from unittest import TestCase
 from simpleruleengine.operator.between import Between
 from simpleruleengine.operator.greater_than_equal import Gte
 from simpleruleengine.operator.string_in import In
-from simpleruleengine.operator.is_true import IsTrue
-from simpleruleengine.operator.is_false import IsFalse
+from simpleruleengine.operator.boolean_operator import BooleanOperator
 
 
 class TestOperator(TestCase):
@@ -23,7 +22,7 @@ class TestOperator(TestCase):
         assert In("dog", "cat").evaluate("dog") is True
 
     def test_evaluate_boolean_true(self):
-        assert IsTrue().evaluate(True) is True
+        assert BooleanOperator(True).evaluate(True) is True
 
     def test_evaluate_boolean_false(self):
-        assert IsFalse().evaluate(False) is True
+        assert BooleanOperator(False).evaluate(False) is True
