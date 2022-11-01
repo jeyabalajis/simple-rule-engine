@@ -2,8 +2,7 @@ from unittest import TestCase
 
 from simpleruleengine.expression.expression import Expression
 from simpleruleengine.operator.greater_than_equal import Gte
-from simpleruleengine.operator.is_false import IsFalse
-from simpleruleengine.operator.is_true import IsTrue
+from simpleruleengine.operator.boolean_operator import BooleanOperator
 from simpleruleengine.operator.string_in import In
 from simpleruleengine.token.boolean_token import BooleanToken
 from simpleruleengine.token.numeric_token import NumericToken
@@ -31,7 +30,7 @@ class TestExpression(TestCase):
 
     def test_evaluate_boolean_token_true(self):
         boolean_token_big_shot = BooleanToken("big_shot")
-        big_shot_true = Expression(boolean_token_big_shot, IsTrue())
+        big_shot_true = Expression(boolean_token_big_shot, BooleanOperator(True))
 
         fact = dict(big_shot=True)
         assert big_shot_true.evaluate(token_dict=fact) is True
@@ -41,7 +40,7 @@ class TestExpression(TestCase):
 
     def test_evaluate_boolean_token_false(self):
         boolean_token_big_shot = BooleanToken("big_shot")
-        big_shot_true = Expression(boolean_token_big_shot, IsFalse())
+        big_shot_true = Expression(boolean_token_big_shot, BooleanOperator(False))
 
         fact = dict(big_shot=True)
         assert big_shot_true.evaluate(token_dict=fact) is False
