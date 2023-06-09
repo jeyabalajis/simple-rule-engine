@@ -68,7 +68,7 @@ modular, hierarchical rules.
 [pypi repository](https://pypi.org/project/simpleruleengine/)
 
 ```commandline
-pip install simpleruleengine==2.0.2
+pip install simpleruleengine==2.0.3
 ```
 
 ## Source Code
