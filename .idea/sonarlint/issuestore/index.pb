@@ -108,3 +108,7 @@ U
 -simpleruleengine/operator/boolean_operator.py,2\9\295f20e2d9cfccd4c831595d890f198fbd4bb8c5
 W
 'simpleruleengine/token/boolean_token.py,1\b\1bbd57d33ff73f91d07fe56718598efa1403e8db
+[
++simpleruleengine/test_expression_builder.py,6\d\6dff60e5d74aee1ebd7bf20bf8dc6fe20457b13a
+a
+1simpleruleengine/expression/expression_builder.py,c\2\c2df3992af5e99d675b4e87abaabd900a65c002c

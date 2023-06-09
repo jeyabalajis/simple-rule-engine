@@ -3,6 +3,8 @@ from simpleruleengine.operator.between import Between
 from simpleruleengine.operator.greater_than_equal import Gte
 from simpleruleengine.operator.string_in import In
 from simpleruleengine.operator.boolean_operator import BooleanOperator
+from simpleruleengine.operator.equal import Eq
+from simpleruleengine.operator.not_equal import NotEq
 
 
 class TestOperator(TestCase):
@@ -26,3 +28,10 @@ class TestOperator(TestCase):
 
     def test_evaluate_boolean_false(self):
         assert BooleanOperator(False).evaluate(False) is True
+
+    def test_evaluate_equal_true(self):
+        assert Eq(2).evaluate(3) is False
+
+    def test_evaluate_not_equal_true(self):
+        assert NotEq(2).evaluate(3) is True
+        assert NotEq(2.25).evaluate(2.26) is True
