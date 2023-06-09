@@ -7,6 +7,8 @@ from simpleruleengine.operator.string_in import In
 from simpleruleengine.token.boolean_token import BooleanToken
 from simpleruleengine.token.numeric_token import NumericToken
 from simpleruleengine.token.string_token import StringToken
+from simpleruleengine.operator.equal import Eq
+from simpleruleengine.operator.not_equal import NotEq
 
 
 class TestExpression(TestCase):
@@ -17,6 +19,9 @@ class TestExpression(TestCase):
         fact = dict(age=40)
 
         assert age_gte_35.evaluate(token_dict=fact) is True
+
+        assert Expression(numeric_token_age, Eq(35)).evaluate(dict(age=35))
+        assert Expression(numeric_token_age, NotEq(35)).evaluate(dict(age=40))
 
     def test_evaluate_string_token(self):
         string_token_pet = StringToken(name="pet")
